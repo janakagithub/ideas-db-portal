@@ -1,0 +1,9 @@
+# local python deps (installed via pip --target; regenerate with pip install --target .pylibs duckdb)
+.pylibs/
+
+# generated analysis outputs (regenerate: PYTHONPATH=./.pylibs python3 analyze.py)
+build/
+
+__pycache__/
+*.pyc
+.DS_Store

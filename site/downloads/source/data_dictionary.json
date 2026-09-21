@@ -1,0 +1,335 @@
+{
+ "idea_protein": {
+  "desc": "Wild-type enzymes studied in the paper \u2014 the amide-synthesizing enzymes (e.g. AcsA, AsbA, AsbB, DesD, SfaB, DdaG) and the AS-series homolog diversity panel (AS1\u2013AS48). One row per distinct enzyme; engineered variants live in idea_mutant.",
+  "cols": {
+   "id": "Stable internal identifier for the enzyme.",
+   "name": "Enzyme name as used in the paper (e.g. 'AcsA', 'AS9').",
+   "aa_sequence": "Protein amino-acid sequence (populated for the six named enzymes from UniProt/PDB; AS-panel pending).",
+   "dna_sequence": "Coding DNA sequence (not yet populated).",
+   "structure_url": "Link to a 3-D structure (RCSB PDB) \u2014 populated for enzymes with a solved structure (e.g. DesD 7TGM).",
+   "source_organism": "Organism the enzyme derives from (populated for the named enzymes).",
+   "source_type": "Kind of entity \u2014 'enzyme' here.",
+   "notes": "Free-text notes.",
+   "created_at": "Row creation timestamp (audit).",
+   "updated_at": "Row update timestamp (audit).",
+   "created_by": "Who/what created the row (audit; here the ETL loader)."
+  }
+ },
+ "idea_mutant": {
+  "desc": "Engineered variants of a parent enzyme (all AS9 here): single point mutants, combinatorial multi-mutants, and the full site-saturation (SSM) panel. The wild-type reference is the one row flagged is_wild_type=true.",
+  "cols": {
+   "id": "Stable internal identifier for the variant.",
+   "idea_protein_id": "The parent enzyme this variant derives from (\u2192 idea_protein).",
+   "mutations": "Mutation(s) in standard notation, e.g. 'A219M' or 'V213L A215Q'; empty for wild-type.",
+   "aa_sequence": "Variant amino-acid sequence (not yet populated).",
+   "dna_sequence": "Variant coding DNA sequence (not yet populated).",
+   "design_method": "How the variant was made (site-directed, combinatorial, site-saturation, wild-type).",
+   "ai_design_id": "Link to an AI/computational design record, if any (\u2192 ai_design).",
+   "is_wild_type": "True for the wild-type baseline used as the fold-change reference.",
+   "notes": "Free-text notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_reactant": {
+  "desc": "Chemical species \u2014 both substrates (diacids, diamines, amino acids) and products (the synthesized amide diads/triads/tetrads, N66 congeners, MAXA-family isomers). One row per distinct chemical as named in the source data.",
+  "cols": {
+   "id": "Stable internal identifier for the chemical.",
+   "name": "Chemical name as used in the paper.",
+   "aliases": "Alternate names (not yet populated).",
+   "smiles": "SMILES structure string.",
+   "inchi": "InChI structure string (not yet populated).",
+   "inchi_key": "InChIKey (hashed structure id) \u2014 populated for the real monomer/substrate chemicals via PubChem.",
+   "molecular_formula": "Molecular formula \u2014 populated for the real monomer/substrate chemicals via PubChem.",
+   "molecular_weight": "Monoisotopic/observed mass (m/z) \u2014 populated for measured products.",
+   "notes": "Free-text notes, incl. whether the row is a synthesized product.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_reaction": {
+  "desc": "A synthesis reaction assayed in the paper \u2014 a substrate pair condensing into an amide product, grouped by reaction class (diad / triad / tetrad / MAXA / N66 synthesis).",
+  "cols": {
+   "id": "Stable internal identifier for the reaction.",
+   "name": "Human label, e.g. 'Diad synthesis: Adipic acid and Hexamethylenediamine'.",
+   "equation": "The substrate pair / reaction description as given in the source.",
+   "smarts": "Reaction SMARTS pattern (not yet populated).",
+   "reaction_type": "Reaction class: Diad / Triad / Tetrad / MAXA / N66 synthesis.",
+   "notes": "Free-text notes (e.g. inferred-substrate or unresolved-code flags).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_stoichiometry": {
+  "desc": "Which chemicals participate in a reaction and in what role \u2014 the substrate/product membership of each idea_reaction. Negative coefficient = consumed, positive = produced.",
+  "cols": {
+   "id": "Row identifier.",
+   "idea_reaction_id": "The reaction (\u2192 idea_reaction).",
+   "idea_reactant_id": "The participating chemical (\u2192 idea_reactant).",
+   "coefficient": "Stoichiometric coefficient (\u22121 substrate, +1 product here).",
+   "role": "'substrate' or 'product'.",
+   "notes": "Free-text notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_strain": {
+  "desc": "Microbial host strains \u2014 the E. coli BL21(DE3) expression host; the no-enzyme host-lysate control samples link here.",
+  "cols": {
+   "id": "Row identifier.",
+   "long_name": "Full strain name.",
+   "short_name": "Short strain label.",
+   "parent_strain_id": "Parent strain, for derived strains (\u2192 idea_strain).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_experiment": {
+  "desc": "A logical experiment / assay campaign grouping many samples (e.g. the tetrad-synthesis panels, the AS9 engineering campaign, the Figure-4 substrate scope, a specific plate run).",
+  "cols": {
+   "id": "Experiment identifier.",
+   "start_date": "When the experiment began (not populated).",
+   "type": "Experiment/assay type (e.g. the '6,6' polymer type).",
+   "index_num": "Ordinal index (not populated).",
+   "description": "Human description / project tag.",
+   "procedure_id": "Link to the lab procedure used (\u2192 idea_procedure).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_sample": {
+  "desc": "One assay instance \u2014 a single enzyme \u00d7 substrate reaction measured in one replicate/well. The enzyme is NOT a column here; it is linked via sample_protein (a sample may carry a wild-type enzyme, an engineered mutant, or nothing at all for a no-enzyme control).",
+  "cols": {
+   "id": "Sample identifier.",
+   "name": "Human label encoding enzyme|substrate|replicate for readability.",
+   "experiment_id": "The experiment this sample belongs to (\u2192 idea_experiment).",
+   "strain_id": "Host strain, if recorded (\u2192 idea_strain).",
+   "procedure_id": "Lab procedure, if recorded (\u2192 idea_procedure).",
+   "replicate": "Replicate number (1..N) \u2014 each source replicate is its own sample row.",
+   "sample_type": "Assay format: in vitro synthesis assay / cell lysate / purified enzyme.",
+   "parent_sample_id": "Parent sample, for derived/split samples (\u2192 idea_sample).",
+   "storage_location": "Plate position or storage note (e.g. 'row C col 1').",
+   "notes": "Free-text notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_measurement": {
+  "desc": "A measurement event on a sample \u2014 the instrument readout (mass-spec, LC-MS quantitation, titer assay) that a parameter value came from.",
+  "cols": {
+   "id": "Measurement identifier.",
+   "sample_id": "The sample measured (\u2192 idea_sample).",
+   "procedure_id": "Measurement procedure (\u2192 idea_procedure).",
+   "type": "Measurement type (mass-spec, titer assay, \u2026).",
+   "filename": "Source data file, if any.",
+   "notes": "Free-text notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "protein_parameter": {
+  "desc": "Enzyme/variant-scoped numeric results \u2014 summary values attached to a protein or mutant (e.g. the averaged N66 titer with its standard deviation).",
+  "cols": {
+   "id": "Row identifier.",
+   "idea_protein_id": "Enzyme scope (\u2192 idea_protein), if protein-level.",
+   "idea_mutant_id": "Variant scope (\u2192 idea_mutant), if variant-level.",
+   "label": "What is measured, e.g. 'N66 L1 titer (avg)'.",
+   "value": "The numeric value (typed REAL).",
+   "unit": "Unit, e.g. mg/L.",
+   "error": "Uncertainty \u2014 here the standard deviation of replicates.",
+   "measurement_id": "Originating measurement (\u2192 idea_measurement).",
+   "computation_id": "Originating computation, if predicted (\u2192 computation).",
+   "idea_reaction_id": "Reaction context (\u2192 idea_reaction).",
+   "notes": "Free-text notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "protein_comparison": {
+  "desc": "A variant-vs-reference comparison \u2014 the fold-change of an engineered variant relative to wild-type (the site-saturation and plate fold-change data live here).",
+  "cols": {
+   "id": "Row identifier.",
+   "idea_protein_id": "Parent enzyme (\u2192 idea_protein).",
+   "mutant_id": "The variant being compared (\u2192 idea_mutant).",
+   "reference_mutant_id": "The reference variant, i.e. wild-type (\u2192 idea_mutant).",
+   "label": "What is compared, e.g. 'fold-change to WT (N66 L1)'.",
+   "value": "The comparison value (a ratio here).",
+   "unit": "Unit ('ratio').",
+   "idea_reaction_id": "Reaction context (\u2192 idea_reaction).",
+   "measurement_id": "The variant's measurement (\u2192 idea_measurement).",
+   "reference_measurement_id": "The reference's measurement (\u2192 idea_measurement).",
+   "notes": "Free-text notes (e.g. which replicate).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "sample_parameter": {
+  "desc": "Per-sample measured values \u2014 the core measurement table. Each row is one number about one sample and, via the analyte link, one specific product: mass-spec intensity, titer (mg/L), or conversion (%). value is text discriminated by value_type (the EAV pattern).",
+  "cols": {
+   "id": "Row identifier.",
+   "sample_id": "The sample this value is about (\u2192 idea_sample).",
+   "idea_reactant_id": "The analyte/product the value describes (\u2192 idea_reactant) \u2014 the key that keeps e.g. MAXA vs XAMA titers in one well unambiguous.",
+   "idea_reaction_id": "The reaction context (\u2192 idea_reaction).",
+   "label": "What is measured: 'mass-spec intensity', 'titer', 'conversion', 'N66 L1 titer'.",
+   "value": "The value as text (typed via value_type).",
+   "value_type": "Discriminator for value: 'real' | 'int' | 'text'.",
+   "unit": "Unit: intensity (a.u.), mg/L, %.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "sample_protein": {
+  "desc": "Links a sample to the enzyme it contains \u2014 a wild-type protein OR an engineered mutant. A no-enzyme (negative control) sample simply has no row here.",
+  "cols": {
+   "id": "Row identifier.",
+   "sample_id": "The sample (\u2192 idea_sample).",
+   "idea_protein_id": "The wild-type enzyme, if the sample carries one (\u2192 idea_protein).",
+   "idea_mutant_id": "The engineered variant, if the sample carries one (\u2192 idea_mutant).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "sample_reactant": {
+  "desc": "Links a sample to its substrate chemical(s), with concentration where recorded.",
+  "cols": {
+   "id": "Row identifier.",
+   "sample_id": "The sample (\u2192 idea_sample).",
+   "idea_reactant_id": "The substrate chemical (\u2192 idea_reactant).",
+   "concentration": "Substrate concentration, if recorded.",
+   "concentration_unit": "Concentration unit.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "sample_reaction": {
+  "desc": "Links a sample to the reaction(s) it assays; is_primary marks the main reaction of the sample.",
+  "cols": {
+   "id": "Row identifier.",
+   "sample_id": "The sample (\u2192 idea_sample).",
+   "idea_reaction_id": "The reaction assayed (\u2192 idea_reaction).",
+   "is_primary": "True if this is the sample's primary reaction.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_lab": {
+  "desc": "Labs that generated data. Empty in this release (provenance backbone).",
+  "cols": {
+   "id": "Row id.",
+   "name": "Lab name.",
+   "location": "Lab location.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_people": {
+  "desc": "People/contacts. Empty in this release (provenance backbone).",
+  "cols": {
+   "id": "Row id.",
+   "first_name": "First name.",
+   "last_name": "Last name.",
+   "email": "Email.",
+   "lab_id": "Their lab (\u2192 idea_lab).",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_protocol": {
+  "desc": "Written protocols. Empty in this release (provenance backbone).",
+  "cols": {
+   "id": "Row id.",
+   "description": "Protocol description.",
+   "filename": "Protocol file.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_procedure": {
+  "desc": "A protocol applied by a lab at a time. Empty in this release.",
+  "cols": {
+   "id": "Row id.",
+   "protocol_id": "Protocol (\u2192 idea_protocol).",
+   "lab_id": "Lab (\u2192 idea_lab).",
+   "contact_id": "Contact person (\u2192 idea_people).",
+   "timestamp": "When performed.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "ai_design": {
+  "desc": "AI/computational enzyme-design runs. Empty in this release (platform-optional).",
+  "cols": {
+   "id": "Row id.",
+   "idea_protein_id": "Target enzyme (\u2192 idea_protein).",
+   "design_method": "Method.",
+   "model_name": "Model used.",
+   "proposed_mutations": "Proposed mutations.",
+   "proposed_sequence": "Proposed sequence.",
+   "optimization_target": "Objective.",
+   "optimization_algorithm": "Algorithm.",
+   "generation": "Design generation.",
+   "objective_scores": "Objective scores.",
+   "pareto_rank": "Pareto rank.",
+   "pareto_optimal": "On Pareto front?",
+   "selected_for_testing": "Chosen for wet-lab test?",
+   "design_rationale": "Rationale.",
+   "run_date": "Run date.",
+   "notes": "Notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "computation": {
+  "desc": "Computational predictions/simulations. Empty in this release (platform-optional).",
+  "cols": {
+   "id": "Row id.",
+   "idea_protein_id": "Enzyme (\u2192 idea_protein).",
+   "idea_mutant_id": "Variant (\u2192 idea_mutant).",
+   "idea_reaction_id": "Reaction (\u2192 idea_reaction).",
+   "procedure_id": "Procedure (\u2192 idea_procedure).",
+   "type": "Type.",
+   "model_name": "Model.",
+   "compute_platform": "Platform.",
+   "simulation_params": "Parameters.",
+   "run_date": "Date.",
+   "filename": "Output file.",
+   "notes": "Notes.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ },
+ "idea_dbxref": {
+  "desc": "Cross-references to external databases \u2014 PubChem CIDs for compounds and PDB/UniProt accessions for enzymes.",
+  "cols": {
+   "id": "Row id.",
+   "entity_type": "Which entity type.",
+   "entity_id": "Which entity.",
+   "database_name": "External DB.",
+   "accession": "External accession.",
+   "url": "External URL.",
+   "created_at": "Audit.",
+   "updated_at": "Audit.",
+   "created_by": "Audit."
+  }
+ }
+}
