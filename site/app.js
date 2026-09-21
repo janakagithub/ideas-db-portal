@@ -433,8 +433,9 @@ function drawERD(){
       if(!dragging) return;
       const dx=(ev.clientX-sx)/state.zoom, dy=(ev.clientY-sy)/state.zoom;
       if(Math.abs(ev.clientX-sx)+Math.abs(ev.clientY-sy)>3) moved=true;
-      P.x=ox+dx; P.y=oy+dy;
+      P.x=Math.max(4, ox+dx); P.y=Math.max(4, oy+dy); // never slide under the top/left edge
       g.setAttribute("transform",`translate(${P.x},${P.y})`);
+      if(growForTables()) applyCanvas();               // extend canvas to the right/bottom as needed
       updateEdges();
     });
     const endDrag=(ev)=>{
@@ -468,32 +469,58 @@ function drawERD(){
     });
   }
 
-  /* ---- zoom / pan ---- */
+  /* ---- canvas sizing / zoom / pan ---- */
+  // vbW/vbH: the canvas (viewBox) size in user units. It grows to fill the
+  // (resizable) container and to contain any table dragged toward the edges,
+  // so a table dragged into the newly-revealed area is never clipped by the SVG.
   const state={zoom:1};
+  let vbW=contentW, vbH=contentH;
   const zlabel=$("#erd-zlabel");
-  function applyZoom(){
-    svg.style.width=(contentW*state.zoom)+"px";
-    svg.style.height=(contentH*state.zoom)+"px";
+  function applyCanvas(){
+    svg.setAttribute("viewBox",`0 0 ${vbW} ${vbH}`);
+    svg.style.width=(vbW*state.zoom)+"px";
+    svg.style.height=(vbH*state.zoom)+"px";
     if(zlabel) zlabel.textContent=Math.round(state.zoom*100)+"%";
+  }
+  function fillToContainer(){
+    const cw=(host.clientWidth||0)/state.zoom, ch=(host.clientHeight||0)/state.zoom;
+    let changed=false;
+    if(cw>vbW){vbW=cw;changed=true;} if(ch>vbH){vbH=ch;changed=true;}
+    return changed;
+  }
+  function growForTables(){
+    let changed=false;
+    Object.values(L).forEach(l=>{
+      if(l.x+l.w+PAD>vbW){vbW=l.x+l.w+PAD;changed=true;}
+      if(l.y+l.h+PAD>vbH){vbH=l.y+l.h+PAD;changed=true;}
+    });
+    return changed;
   }
   function setZoom(z,cx,cy){
     z=Math.max(0.3,Math.min(2,z));
     const prev=state.zoom;
-    // keep point under cursor stable
-    const sl=host.scrollLeft, st=host.scrollTop;
-    const px=(cx==null?host.clientWidth/2:cx)+sl, py=(cy==null?host.clientHeight/2:cy)+st;
-    state.zoom=z; applyZoom();
+    const px=(cx==null?host.clientWidth/2:cx)+host.scrollLeft;
+    const py=(cy==null?host.clientHeight/2:cy)+host.scrollTop;
+    state.zoom=z; fillToContainer(); growForTables(); applyCanvas();
     const f=z/prev;
     host.scrollLeft = px*f - (cx==null?host.clientWidth/2:cx);
     host.scrollTop  = py*f - (cy==null?host.clientHeight/2:cy);
   }
   function fit(){
     const avail=(host.clientWidth||contentW)-20;
-    setZoomAbs(Math.max(0.3,Math.min(1.4, avail/contentW)));
+    state.zoom=Math.max(0.3,Math.min(1.4, avail/contentW));
+    vbW=contentW; vbH=contentH; fillToContainer(); growForTables(); applyCanvas();
     host.scrollLeft=0; host.scrollTop=0;
   }
-  function setZoomAbs(z){ state.zoom=Math.max(0.3,Math.min(2,z)); applyZoom(); }
-  applyZoom();
+  growForTables(); fillToContainer(); applyCanvas();
+  // keep the canvas filling the container when it is resized (drag-handle / window)
+  try{
+    if(typeof ResizeObserver!=="undefined"){
+      if(host._erdRO) host._erdRO.disconnect();
+      host._erdRO=new ResizeObserver(()=>{ if(fillToContainer()) applyCanvas(); });
+      host._erdRO.observe(host);
+    }
+  }catch(e){}
 
   const zin=$("#erd-zin"), zout=$("#erd-zout"), fitb=$("#erd-fit"), rst=$("#erd-reset");
   if(zin) zin.addEventListener("click",()=>setZoom(state.zoom*1.2));
