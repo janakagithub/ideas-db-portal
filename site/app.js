@@ -45,8 +45,8 @@ let TBL = {};          // name -> table object
 
 const VIEWS = [
   ["overview","Overview"], ["schema","Schema & ERD"], ["tables","Tables"],
-  ["dict","Data Dictionary"], ["rel","Relationships"], ["onto","Ontologies & Units"],
-  ["quality","Data Quality"], ["download","Download"],
+  ["dict","Data Dictionary"], ["rel","Relationships"], ["measure","Measurements"],
+  ["onto","Ontologies & Units"], ["quality","Data Quality"], ["download","Download"],
 ];
 
 /* =============================================================== boot */
@@ -83,7 +83,8 @@ function route(){
   const view = el("section",{class:"view on",id:"view-"+id});
   app.append(view);
   ({overview:renderOverview,schema:renderSchema,tables:renderTables,dict:renderDict,
-    rel:renderRel,onto:renderOnto,quality:renderQuality,download:renderDownload}[id]||renderOverview)(view,arg);
+    rel:renderRel,measure:renderMeasure,onto:renderOnto,quality:renderQuality,
+    download:renderDownload}[id]||renderOverview)(view,arg);
   window.scrollTo(0,0);
 }
 
@@ -704,15 +705,14 @@ function renderRel(v){
 }
 
 /* =============================================================== Ontologies & Units */
-function renderOnto(v){
-  v.append(el("h2",{},"Ontologies, cross-references & units"));
-  v.append(el("p",{class:"sec-intro"},"How the dataset connects to the wider world: every measured quantity and the unit it is recorded in, a UCUM-coded unit reference, external database cross-references with live links, and the chemical / biological identifier notations used — each mapped to the fields that carry it and to its authoritative registry or specification."));
-
-  /* ---------- 1. Measured parameters catalogue ---------- */
-  v.append(el("h3",{},"Measured parameters & their units"));
-  v.append(el("p",{class:"muted",style:"margin-top:0"},"Every distinct measured/experimental quantity in the data, the unit it is recorded in and the physical quantity it represents. Values are stored as label / value / unit triples — assay conditions & readouts in sample_parameter, protein- and variant-level metrics in protein_parameter."));
-  const MEAS=[["sample_parameter","assay condition / readout"],["protein_parameter","protein / variant metric"]];
-  const prows=[]; const usedByUnit={};
+/* =============================================================== Measurements */
+// Aggregate the EAV measured-value tables into one (parameter × unit) catalogue
+// with numeric summaries. Shared by the Measurements tab and the unit reference.
+function measureCatalogue(){
+  const MEAS=[["sample_parameter","assay condition / readout"],
+              ["protein_parameter","protein / variant metric"]];
+  const numRe=/^-?\d+(\.\d+)?([eE][-+]?\d+)?$/;
+  const params=[];
   MEAS.forEach(([tn,kind])=>{
     const t=TBL[tn]; if(!t) return;
     const ci=t.columns.indexOf("label"), ui=t.columns.indexOf("unit"), vi=t.columns.indexOf("value");
@@ -720,28 +720,113 @@ function renderOnto(v){
     const agg={};
     t.rows.forEach(r=>{
       const lab=r[ci]==null?"":r[ci], un=(ui>=0?(r[ui]||""):"");
-      const k=lab+"\u0000"+un;
-      const a=agg[k]||(agg[k]={parameter:lab,unit:un,table:tn,kind,n:0,ex:[]});
-      a.n++; if(a.ex.length<3 && vi>=0 && r[vi]!=null && r[vi]!=="") a.ex.push(r[vi]);
+      const a=agg[lab+"\u0000"+un]||(agg[lab+"\u0000"+un]={parameter:lab,unit:un,table:tn,kind,vals:[],miss:0,ex:[]});
+      const val=(vi>=0?r[vi]:"");
+      if(val==null||val==="") a.miss++;
+      else{ a.vals.push(val); if(a.ex.length<3) a.ex.push(val); }
     });
-    Object.values(agg).forEach(a=>{
-      a.quantity = a.unit ? (UNIT_REF[a.unit]?UNIT_REF[a.unit].quantity:"—") : "categorical / text";
-      prows.push(a);
-      if(a.unit){ (usedByUnit[a.unit]=usedByUnit[a.unit]||[]).push(a.parameter); }
-    });
+    Object.values(agg).forEach(a=>params.push(a));
   });
-  const pcols=[
-    {key:"parameter",label:"Parameter",cls:"mono"},
-    {key:"unit",label:"Unit",cls:"mono",render:r=>r.unit?r.unit:el("span",{class:"muted"},"— (categorical)")},
-    {key:"quantity",label:"Quantity kind",render:r=>el("span",{class:"ink2"},r.quantity)},
-    {key:"kind",label:"Role"},
-    {key:"table",label:"Source table",cls:"mono"},
-    {key:"n",label:"Records",num:true},
-    {key:"ex",label:"Examples",cls:"mono",render:r=>r.ex.join(", "),raw:r=>r.ex.join(", ")},
-  ];
-  v.append(sortableTable(pcols,prows,{placeholder:"Search measured parameters…",sort:"parameter"}));
+  params.forEach(a=>{
+    const n=a.vals.length, total=n+a.miss;
+    const nums=a.vals.filter(x=>numRe.test(x)).map(Number);
+    a.numeric = n>0 && nums.length===n;
+    a.records=total;
+    a.missPct = total? Math.round(1000*a.miss/total)/10 : 0;
+    if(a.numeric && nums.length){
+      nums.sort((x,y)=>x-y);
+      a.min=nums[0]; a.max=nums[nums.length-1];
+      a.median = nums.length%2 ? nums[(nums.length-1)/2] : (nums[nums.length/2-1]+nums[nums.length/2])/2;
+    }
+    a.quantity = a.unit ? (UNIT_REF[a.unit]?UNIT_REF[a.unit].quantity:"—")
+                        : (a.numeric?"Numeric (unitless)":"Categorical / text");
+    a.group = a.unit ? (UNIT_GROUP[a.unit]||"Other measured quantity")
+                     : (a.numeric?"Unitless numeric":"Categorical condition (no unit)");
+  });
+  return params;
+}
+function fmtMeas(x){
+  if(x===0) return "0";
+  const a=Math.abs(x);
+  if(a>=1e4||a<1e-3) return x.toExponential(2);
+  return String(Math.round(x*1e4)/1e4);
+}
+function renderMeasure(v){
+  v.append(el("h2",{},"Measurements"));
+  v.append(el("p",{class:"sec-intro"},"Every measured or experimental quantity in the dataset. Values are stored as label / value / unit triples — assay conditions & readouts in <code>sample_parameter</code>, protein- and variant-level metrics in <code>protein_parameter</code> — so each “parameter” below is one distinct measurement label with its unit, numeric range and coverage. Categories are grouped by the physical quantity of the unit (UCUM-grounded); parameters without a documented unit are shown as categorical/unitless rather than forced into a category."));
 
-  /* ---------- 2. Unit reference (UCUM) ---------- */
+  const params=measureCatalogue();
+  const numeric=params.filter(p=>p.numeric);
+  const units=new Set(params.filter(p=>p.unit).map(p=>p.unit));
+  const totalRecords=params.reduce((s,p)=>s+p.records,0);
+
+  const tiles=el("div",{class:"tiles"});
+  const stat=(n,l,s)=>el("div",{class:"tile"},[el("div",{class:"n"},fmt(n)),el("div",{class:"l"},l),s?el("div",{class:"s"},s):null]);
+  tiles.append(
+    stat(params.length,"Measured parameters","distinct label × unit"),
+    stat(totalRecords,"Measured records","label/value/unit rows"),
+    stat(numeric.length,"Numeric parameters",`${params.length-numeric.length} categorical`),
+    stat(units.size,"Distinct units","see Ontologies & Units"),
+  );
+  v.append(tiles);
+
+  /* by-category summary */
+  v.append(el("h3",{},"By measurement category"));
+  const groups={};
+  params.forEach(p=>{ (groups[p.group]=groups[p.group]||[]).push(p); });
+  const gorder=["Concentration","Volume","Incubation condition","Proteomics readout (abundance)",
+    "Proteomics readout (fold-change)","Proteomics readout (intensity)","Ratio / fraction",
+    "Structural prediction","Structural / model score","Sequence-model score",
+    "Unitless numeric","Other measured quantity","Categorical condition (no unit)"];
+  const gkeys=Object.keys(groups).sort((a,b)=>{
+    const ia=gorder.indexOf(a), ib=gorder.indexOf(b);
+    return (ia<0?99:ia)-(ib<0?99:ib);
+  });
+  const gwrap=el("div",{class:"dlgrid"});
+  gkeys.forEach(g=>{
+    const ps=groups[g];
+    const gunits=[...new Set(ps.filter(p=>p.unit).map(p=>p.unit))];
+    const c=el("div",{class:"dl",style:"cursor:default"});
+    const body=el("div",{style:"flex:1"});
+    body.append(el("h4",{},[g," ",el("span",{class:"pill inferred"},String(ps.length))]));
+    body.append(el("div",{class:"ink2",style:"font-size:.82rem;margin:.15rem 0"},
+      gunits.length?("Units: "+gunits.join(", ")):"no unit (categorical / unitless)"));
+    body.append(el("div",{class:"sz"},ps.slice(0,4).map(p=>p.parameter).join(", ")+(ps.length>4?" …":"")));
+    c.append(body); gwrap.append(c);
+  });
+  v.append(gwrap);
+
+  /* full catalogue */
+  v.append(el("h3",{},"All measured parameters"));
+  v.append(el("p",{class:"muted",style:"margin-top:0"},"Search or sort by any column — including category, unit, or missingness. Min / median / max are computed from the numeric values; “—” marks non-numeric (categorical) parameters."));
+  const cols=[
+    {key:"parameter",label:"Parameter",cls:"mono"},
+    {key:"group",label:"Category",render:r=>el("span",{class:"ink2"},r.group)},
+    {key:"unit",label:"Unit",cls:"mono",render:r=>r.unit?r.unit:el("span",{class:"muted"},"—"),raw:r=>r.unit},
+    {key:"quantity",label:"Quantity / meaning",render:r=>el("span",{class:"muted"},r.quantity),raw:r=>r.quantity},
+    {key:"table",label:"Source table",cls:"mono",render:r=>el("a",{href:"#tables/"+r.table},r.table),raw:r=>r.table},
+    {key:"type",label:"Type",render:r=>r.numeric?"numeric":"categorical",raw:r=>r.numeric?1:0},
+    {key:"min",label:"Min",num:true,render:r=>r.numeric?fmtMeas(r.min):"—",raw:r=>r.numeric?r.min:null},
+    {key:"median",label:"Median",num:true,render:r=>r.numeric?fmtMeas(r.median):"—",raw:r=>r.numeric?r.median:null},
+    {key:"max",label:"Max",num:true,render:r=>r.numeric?fmtMeas(r.max):"—",raw:r=>r.numeric?r.max:null},
+    {key:"missPct",label:"Missing %",num:true,render:r=>r.missPct+"%",raw:r=>r.missPct},
+    {key:"records",label:"Records",num:true},
+    {key:"ex",label:"Examples",cls:"mono",render:r=>r.ex.map(x=>String(x).length>16?String(x).slice(0,15)+"…":x).join(", "),raw:r=>r.ex.join(", ")},
+  ];
+  v.append(sortableTable(cols,params,{placeholder:"Search measured parameters…",sort:"group",exportName:"ideas_measurements.csv"}));
+}
+
+function renderOnto(v){
+  v.append(el("h2",{},"Ontologies, cross-references & units"));
+  v.append(el("p",{class:"sec-intro"},["How the dataset connects to the wider world: a UCUM-coded reference for every unit, external database cross-references with live links, and the chemical / biological identifier notations used — each mapped to the fields that carry it and to its authoritative registry or specification. The measured quantities recorded in these units are catalogued in the ",
+    el("a",{href:"#measure"},"Measurements"),
+    " tab."]));
+
+  /* ---------- unit -> parameters map (drives the unit reference "Used by") ---------- */
+  const usedByUnit={};
+  measureCatalogue().forEach(a=>{ if(a.unit){ (usedByUnit[a.unit]=usedByUnit[a.unit]||[]).push(a.parameter); } });
+
+  /* ---------- 1. Unit reference (UCUM) ---------- */
   v.append(el("h3",{},"Unit reference (UCUM-coded)"));
   v.append(el("p",{class:"muted",style:"margin-top:0"},["Each unit that appears in the data, its physical quantity and dimension, and its ",
     el("a",{href:"https://ucum.org/",target:"_blank",rel:"noopener"},"UCUM"),
@@ -762,7 +847,7 @@ function renderOnto(v){
   ];
   v.append(sortableTable(ucols,urows,{placeholder:"Search units…",sort:"n",dir:-1}));
 
-  /* ---------- 3. External database cross-references ---------- */
+  /* ---------- 2. External database cross-references ---------- */
   v.append(el("h3",{},"External database cross-references"));
   v.append(el("p",{class:"muted",style:"margin-top:0"},"From the idea_dbxref table — links from IDEAS entities out to authoritative external resources. Each accession is a live link; the registry name links to its home page."));
   const dbwrap=el("div",{class:"dlgrid"});
@@ -783,7 +868,7 @@ function renderOnto(v){
   });
   v.append(dbwrap);
 
-  /* ---------- 4. Chemical & biological identifier notations ---------- */
+  /* ---------- 3. Chemical & biological identifier notations ---------- */
   v.append(el("h3",{},"Chemical & biological identifier notations"));
   v.append(el("p",{class:"muted",style:"margin-top:0"},"Structured identifiers and controlled notations embedded in the data (not free text) — each linked to its specification/registry, with the fields that carry it and, where a public resolver exists, a live lookup of an example value."));
   const refKeys=Object.keys(ONTO_REF).sort((a,b)=>b.length-a.length);
@@ -830,6 +915,18 @@ const UNIT_REF={
   relative_abundance:{name:"Relative abundance",quantity:"Mass-spec relative abundance (a.u.)",dim:"dimensionless",ucum:"1"},
   intensity:{name:"Intensity",quantity:"Mass-spec intensity (a.u.)",dim:"dimensionless",ucum:"1"},
   "mg/L":{name:"Milligrams per litre",quantity:"Mass concentration / titer",dim:"mass·volume⁻¹",ucum:"mg/L"},
+};
+// measurement category per unit (coarse grouping for the Measurements tab, grounded in the unit's physical quantity)
+const UNIT_GROUP={
+  mM:"Concentration", "mg/L":"Concentration",
+  uL:"Volume",
+  C:"Incubation condition", h:"Incubation condition", rpm:"Incubation condition",
+  angstrom:"Structural prediction", score:"Structural / model score",
+  log_likelihood_ratio:"Sequence-model score",
+  relative_abundance:"Proteomics readout (abundance)",
+  fold:"Proteomics readout (fold-change)",
+  intensity:"Proteomics readout (intensity)",
+  ratio:"Ratio / fraction", "%":"Ratio / fraction",
 };
 // registry home pages for dbxref sources
 const REGISTRY={

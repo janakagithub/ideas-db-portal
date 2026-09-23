@@ -77,7 +77,7 @@ require("./site/app.js");
 
 function fire(ev){ (_win._l[ev]||[]).forEach(f=>f()); }
 setTimeout(()=>{
-  const views = ["overview","schema","tables","dict","rel","onto","quality","download",
+  const views = ["overview","schema","tables","dict","rel","measure","onto","quality","download",
                  "tables/idea_protein","tables/sample_parameter","tables/idea_lab"];
   let fail=0;
   console.log("nav buttons:", registry.nav.children.length, "| app children after boot:", registry.app.children.length);
