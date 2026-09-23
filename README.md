@@ -27,7 +27,7 @@ diad/triad/tetrad oligoamide synthesis), built from the source in
 | **Relationships** | How records connect — **DECLARED / INFERRED / UNCERTAIN** with FK coverage % and orphan counts |
 | **Ontologies & Units** | **Measured-parameters catalogue** (every quantity → unit → physical quantity → source field); **UCUM-coded unit reference** (name, dimension, UCUM code, and which parameters use each unit); external cross-references (PubChem, PDB, UniProt, ChEBI, KEGG, MetaCyc, ORNL LIMS) with live accession + registry links; **chemical/biological identifier notations** (SMILES, InChI/InChIKey, SMARTS, molecular formula, ModelSEED/KBase IDs, HGVS-like variants) each linked to its spec/registry and the fields that carry it, with example-value resolvers |
 | **Data Quality** | Per-table completeness; consistency findings (data vs DDL vs data dictionary) |
-| **Download** | SQL dump, SQLite DB, data dictionary (CSV/JSON), full metadata, original source ZIP |
+| **Download** | SQL dump, SQLite DB, data dictionary (CSV/TSV/JSON/MD), **DBML schema** (dbdiagram.io-ready), relationships (JSON/MD), **ER diagram (SVG + PNG)**, units/ontology/data-quality reports (TSV), full metadata, original source ZIP |
 
 ## Dataset at a glance
 
@@ -49,23 +49,52 @@ diad/triad/tetrad oligoamide synthesis), built from the source in
 
 ```
 Ideas-DB-portal/
-├── analyze.py        # deep analysis pipeline: parquet → SQLite + SQL dump + metadata bundle
-├── deploy.sh         # rsync site to poplar + (re)start http.server on :37431
-├── domtest.js        # headless render smoke-test for the web app (node domtest.js)
-├── build/            # generated: ideas.db, ideas_dump.sql, data_dictionary.{csv,json}, metadata.json
-└── site/             # the deployed static site (index.html, app.js, metadata.json, downloads/)
+├── analyze.py            # deep analysis pipeline: parquet → SQLite + SQL dump + metadata bundle
+├── generate_exports.py   # DBML, relationships (JSON/MD), dictionary (TSV/MD), reports (TSV), ER diagram (SVG/PNG)
+├── rebuild_portal.sh     # one command: analyze → export → refresh site → smoke-test → deploy
+├── deploy.sh             # rsync site to poplar + (re)start http.server on :37431
+├── domtest.js            # headless render smoke-test for the web app (node domtest.js)
+├── DATA_DICTIONARY.md    # human-readable, per-table field dictionary (generated)
+├── SCHEMA_RELATIONSHIPS.md # relationship tree + reference table (generated)
+├── build/                # generated artefacts (see Deliverables below)
+└── site/                 # the deployed static site (index.html, app.js, metadata.json, downloads/)
 ```
 
 ## Rebuild & redeploy
 
+One command does the whole pipeline (rescan → rebuild DB → regenerate all exports → refresh
+site + downloads → smoke-test → push + restart on poplar):
+
 ```bash
 cd /home/janakae/claude_projects/Ideas-DB-portal
-PYTHONPATH=./.pylibs python3 analyze.py          # regenerate build/ from source parquet
-cp build/{metadata.json} site/                   # refresh site data
-cp build/{ideas.db,ideas_dump.sql,data_dictionary.csv,data_dictionary.enriched.json,metadata.json} site/downloads/
-node domtest.js                                   # verify all views render
-bash deploy.sh                                    # push + restart on poplar:37431
+./rebuild_portal.sh                 # full rebuild + deploy
+SKIP_DEPLOY=1 ./rebuild_portal.sh   # rebuild artefacts only, no redeploy
 ```
+
+Or run the stages individually:
+
+```bash
+PYTHONPATH=./.pylibs python3 analyze.py   # parquet → build/ (SQLite, SQL dump, metadata, dictionary)
+python3 generate_exports.py               # → DBML, relationships, reports, ERD SVG/PNG
+node domtest.js                           # verify all views render
+bash deploy.sh                            # push + restart on poplar:37431
+```
+
+## Generated deliverables (`build/` and `site/downloads/`)
+
+| File | What it is |
+|------|------------|
+| `ideas.db` | SQLite database (all 21 tables, source-faithful TEXT) |
+| `ideas_dump.sql` | SQL dump — restore with `sqlite3 ideas.db < ideas_dump.sql` |
+| `data_dictionary.{csv,tsv,enriched.json}` · `DATA_DICTIONARY.md` | field-level dictionary in four formats |
+| `schema.dbml` | DBML — paste into https://dbdiagram.io/ to render the ERD |
+| `schema_relationships.json` · `SCHEMA_RELATIONSHIPS.md` | all 34 relationships (field→field, type, status, match rate, orphans) |
+| `schema.svg` · `schema.png` | static field-level ER diagram (vector + 2160×2370 raster) |
+| `units_report.tsv` | every parameter → unit → physical quantity → UCUM code, + per-unit summary |
+| `ontology_report.tsv` | each identifier/notation field → namespace, ID pattern, example, coverage, registry link |
+| `data_quality_report.tsv` | consistency findings with severity + suggested action |
+| `metadata.json` | the complete analysis bundle powering the site |
+| `ideas_db_source.zip` | original parquet + schema + design docs |
 
 ## How the data connects (quick reference)
 

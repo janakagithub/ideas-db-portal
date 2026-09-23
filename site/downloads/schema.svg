@@ -1,0 +1,569 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1580" viewBox="0 0 1440 1580" font-family="ui-monospace,Menlo,Consolas,monospace">
+<rect width="1440" height="1580" fill="#ffffff"/>
+<path d="M290,96 C462,96 548,476 720,476" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="476" r="3" fill="#0891b2"/>
+<path d="M290,476 C462,476 548,476 720,476" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="476" r="3" fill="#0891b2"/>
+<path d="M290,496 C462,496 548,256 720,256" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="256" r="3" fill="#0891b2"/>
+<path d="M290,516 C462,516 548,996 720,996" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="996" r="3" fill="#0891b2"/>
+<path d="M290,536 C598,536 752,536 1060,536" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="536" r="3" fill="#0891b2"/>
+<path d="M970,176 C1010,176 1020,536 1060,536" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="536" r="3" fill="#0891b2"/>
+<path d="M290,776 C462,776 548,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M290,796 C598,796 752,536 1060,536" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="536" r="3" fill="#0891b2"/>
+<path d="M970,276 C1070,276 620,476 720,476" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="476" r="3" fill="#0891b2"/>
+<path d="M720,376 C548,376 462,76 290,76" fill="none" stroke="#d97706" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="290" cy="76" r="3" fill="#d97706"/>
+<path d="M1310,456 C1410,456 960,256 1060,256" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="256" r="3" fill="#0891b2"/>
+<path d="M1310,556 C1410,556 960,696 1060,696" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="696" r="3" fill="#0891b2"/>
+<path d="M1310,576 C1410,576 960,256 1060,256" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="256" r="3" fill="#0891b2"/>
+<path d="M1310,596 C1410,596 960,376 1060,376" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="376" r="3" fill="#0891b2"/>
+<path d="M970,1236 C1070,1236 620,76 720,76" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="76" r="3" fill="#2563eb"/>
+<path d="M970,1256 C1070,1256 620,1436 720,1436" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="1436" r="3" fill="#0891b2"/>
+<path d="M970,1276 C1010,1276 1020,536 1060,536" fill="none" stroke="#d97706" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="1060" cy="536" r="3" fill="#d97706"/>
+<path d="M970,1316 C1070,1316 620,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M630,96 C670,96 680,996 720,996" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="996" r="3" fill="#2563eb"/>
+<path d="M630,116 C670,116 680,736 720,736" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="736" r="3" fill="#2563eb"/>
+<path d="M970,1496 C1070,1496 620,1436 720,1436" fill="none" stroke="#d97706" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="1436" r="3" fill="#d97706"/>
+<path d="M290,956 C462,956 548,476 720,476" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="476" r="3" fill="#0891b2"/>
+<path d="M290,976 C462,976 548,256 720,256" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="256" r="3" fill="#0891b2"/>
+<path d="M290,1076 C390,1076 -60,756 40,756" fill="none" stroke="#d97706" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="40" cy="756" r="3" fill="#d97706"/>
+<path d="M290,1096 C390,1096 -60,456 40,456" fill="none" stroke="#d97706" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="40" cy="456" r="3" fill="#d97706"/>
+<path d="M290,1116 C462,1116 548,996 720,996" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="996" r="3" fill="#0891b2"/>
+<path d="M290,1236 C462,1236 548,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M630,276 C670,276 680,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M630,296 C670,296 680,476 720,476" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="476" r="3" fill="#2563eb"/>
+<path d="M630,316 C670,316 680,256 720,256" fill="none" stroke="#0891b2" stroke-width="1.4" opacity="0.75" stroke-dasharray="5 4"/>
+<circle cx="720" cy="256" r="3" fill="#0891b2"/>
+<path d="M630,416 C670,416 680,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M630,436 C670,436 680,736 720,736" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="736" r="3" fill="#2563eb"/>
+<path d="M630,576 C670,576 680,1196 720,1196" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="1196" r="3" fill="#2563eb"/>
+<path d="M630,596 C670,596 680,996 720,996" fill="none" stroke="#2563eb" stroke-width="1.4" opacity="0.75"/>
+<circle cx="720" cy="996" r="3" fill="#2563eb"/>
+<rect x="40" y="40" width="250" height="346" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M40,47 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#0891b2"/>
+<text x="50" y="58" fill="#fff" font-size="12.5" font-weight="700">ai_design</text>
+<text x="282" y="58" fill="#e2e8f0" font-size="10" text-anchor="end">5 rows</text>
+<text x="48" y="80" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="70" y="80" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="282" y="80" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="86" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="100" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="100" fill="#0f172a" font-size="10.5" font-weight="400">idea_protein_id</text>
+<text x="282" y="100" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="120" fill="#0f172a" font-size="10.5" font-weight="400">design_method</text>
+<text x="282" y="120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="126" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="140" fill="#0f172a" font-size="10.5" font-weight="400">model_name</text>
+<text x="282" y="140" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="160" fill="#0f172a" font-size="10.5" font-weight="400">proposed_mutations</text>
+<text x="282" y="160" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="166" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="180" fill="#0f172a" font-size="10.5" font-weight="400">proposed_sequence</text>
+<text x="282" y="180" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="200" fill="#0f172a" font-size="10.5" font-weight="400">optimization_target</text>
+<text x="282" y="200" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="206" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="220" fill="#0f172a" font-size="10.5" font-weight="400">optimization_algorithm</text>
+<text x="282" y="220" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="240" fill="#0f172a" font-size="10.5" font-weight="400">generation</text>
+<text x="282" y="240" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="246" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="260" fill="#0f172a" font-size="10.5" font-weight="400">objective_scores</text>
+<text x="282" y="260" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="280" fill="#0f172a" font-size="10.5" font-weight="400">pareto_rank</text>
+<text x="282" y="280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="286" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="300" fill="#0f172a" font-size="10.5" font-weight="400">pareto_optimal</text>
+<text x="282" y="300" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="320" fill="#0f172a" font-size="10.5" font-weight="400">selected_for_testing</text>
+<text x="282" y="320" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="326" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="340" fill="#0f172a" font-size="10.5" font-weight="400">design_rationale</text>
+<text x="282" y="340" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="360" fill="#0f172a" font-size="10.5" font-weight="400">run_date</text>
+<text x="282" y="360" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="366" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="380" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="282" y="380" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="40" y="420" width="250" height="266" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M40,427 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#0891b2"/>
+<text x="50" y="438" fill="#fff" font-size="12.5" font-weight="700">computation</text>
+<text x="282" y="438" fill="#e2e8f0" font-size="10" text-anchor="end">5 rows</text>
+<text x="48" y="460" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="70" y="460" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="282" y="460" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="466" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="480" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="480" fill="#0f172a" font-size="10.5" font-weight="400">idea_protein_id</text>
+<text x="282" y="480" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="48" y="500" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="500" fill="#0f172a" font-size="10.5" font-weight="400">idea_mutant_id</text>
+<text x="282" y="500" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="506" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="520" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="520" fill="#0f172a" font-size="10.5" font-weight="400">idea_reaction_id</text>
+<text x="282" y="520" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="48" y="540" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="540" fill="#0f172a" font-size="10.5" font-weight="400">procedure_id</text>
+<text x="282" y="540" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="546" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="560" fill="#0f172a" font-size="10.5" font-weight="400">type</text>
+<text x="282" y="560" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="580" fill="#0f172a" font-size="10.5" font-weight="400">model_name</text>
+<text x="282" y="580" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="586" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="600" fill="#0f172a" font-size="10.5" font-weight="400">compute_platform</text>
+<text x="282" y="600" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="620" fill="#0f172a" font-size="10.5" font-weight="400">simulation_params</text>
+<text x="282" y="620" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="626" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="640" fill="#0f172a" font-size="10.5" font-weight="400">run_date</text>
+<text x="282" y="640" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="660" fill="#0f172a" font-size="10.5" font-weight="400">filename</text>
+<text x="282" y="660" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="666" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="680" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="282" y="680" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="40" y="720" width="250" height="146" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M40,727 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#0891b2"/>
+<text x="50" y="738" fill="#fff" font-size="12.5" font-weight="700">idea_measurement</text>
+<text x="282" y="738" fill="#e2e8f0" font-size="10" text-anchor="end">27 rows</text>
+<text x="48" y="760" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="70" y="760" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="282" y="760" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="41" y="766" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="780" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="780" fill="#0f172a" font-size="10.5" font-weight="400">sample_id</text>
+<text x="282" y="780" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="48" y="800" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="800" fill="#0f172a" font-size="10.5" font-weight="400">procedure_id</text>
+<text x="282" y="800" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="806" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="820" fill="#0f172a" font-size="10.5" font-weight="400">type</text>
+<text x="282" y="820" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="840" fill="#0f172a" font-size="10.5" font-weight="400">filename</text>
+<text x="282" y="840" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="846" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="860" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="282" y="860" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="40" y="900" width="250" height="246" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M40,907 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#0891b2"/>
+<text x="50" y="918" fill="#fff" font-size="12.5" font-weight="700">protein_parameter</text>
+<text x="282" y="918" fill="#e2e8f0" font-size="10" text-anchor="end">86 rows</text>
+<text x="48" y="940" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="70" y="940" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="282" y="940" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="946" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="960" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="960" fill="#0f172a" font-size="10.5" font-weight="400">idea_protein_id</text>
+<text x="282" y="960" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="48" y="980" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="980" fill="#0f172a" font-size="10.5" font-weight="400">idea_mutant_id</text>
+<text x="282" y="980" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="986" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="1000" fill="#0f172a" font-size="10.5" font-weight="400">label</text>
+<text x="282" y="1000" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="1020" fill="#0f172a" font-size="10.5" font-weight="400">value</text>
+<text x="282" y="1020" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="1026" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="1040" fill="#0f172a" font-size="10.5" font-weight="400">unit</text>
+<text x="282" y="1040" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="1060" fill="#0f172a" font-size="10.5" font-weight="400">error</text>
+<text x="282" y="1060" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="1066" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="1080" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="1080" fill="#0f172a" font-size="10.5" font-weight="400">measurement_id</text>
+<text x="282" y="1080" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="48" y="1100" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="1100" fill="#0f172a" font-size="10.5" font-weight="400">computation_id</text>
+<text x="282" y="1100" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="1106" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="1120" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="1120" fill="#0f172a" font-size="10.5" font-weight="400">idea_reaction_id</text>
+<text x="282" y="1120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="1140" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="282" y="1140" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="40" y="1180" width="250" height="126" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M40,1187 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#0891b2"/>
+<text x="50" y="1198" fill="#fff" font-size="12.5" font-weight="700">sample_parameter</text>
+<text x="282" y="1198" fill="#e2e8f0" font-size="10" text-anchor="end">351 rows</text>
+<text x="48" y="1220" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="70" y="1220" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="282" y="1220" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="41" y="1226" width="248" height="20" fill="#f8fafc"/>
+<text x="48" y="1240" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="70" y="1240" fill="#0f172a" font-size="10.5" font-weight="400">sample_id</text>
+<text x="282" y="1240" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="1260" fill="#0f172a" font-size="10.5" font-weight="400">label</text>
+<text x="282" y="1260" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="41" y="1266" width="248" height="20" fill="#f8fafc"/>
+<text x="70" y="1280" fill="#0f172a" font-size="10.5" font-weight="400">value</text>
+<text x="282" y="1280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="70" y="1300" fill="#0f172a" font-size="10.5" font-weight="400">unit</text>
+<text x="282" y="1300" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="380" y="40" width="250" height="146" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M380,47 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#7c3aed"/>
+<text x="390" y="58" fill="#fff" font-size="12.5" font-weight="700">idea_stoichiometry</text>
+<text x="622" y="58" fill="#e2e8f0" font-size="10" text-anchor="end">10 rows</text>
+<text x="388" y="80" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="410" y="80" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="622" y="80" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="381" y="86" width="248" height="20" fill="#f8fafc"/>
+<text x="388" y="100" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="100" fill="#0f172a" font-size="10.5" font-weight="400">idea_reaction_id</text>
+<text x="622" y="100" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="388" y="120" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="120" fill="#0f172a" font-size="10.5" font-weight="400">idea_reactant_id</text>
+<text x="622" y="120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="381" y="126" width="248" height="20" fill="#f8fafc"/>
+<text x="410" y="140" fill="#0f172a" font-size="10.5" font-weight="400">coefficient</text>
+<text x="622" y="140" fill="#94a3b8" font-size="9" text-anchor="end">real</text>
+<text x="410" y="160" fill="#0f172a" font-size="10.5" font-weight="400">role</text>
+<text x="622" y="160" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="381" y="166" width="248" height="20" fill="#f8fafc"/>
+<text x="410" y="180" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="622" y="180" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="380" y="220" width="250" height="106" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M380,227 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#7c3aed"/>
+<text x="390" y="238" fill="#fff" font-size="12.5" font-weight="700">sample_protein</text>
+<text x="622" y="238" fill="#e2e8f0" font-size="10" text-anchor="end">27 rows</text>
+<text x="388" y="260" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="410" y="260" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="622" y="260" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="381" y="266" width="248" height="20" fill="#f8fafc"/>
+<text x="388" y="280" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="280" fill="#0f172a" font-size="10.5" font-weight="400">sample_id</text>
+<text x="622" y="280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="388" y="300" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="300" fill="#0f172a" font-size="10.5" font-weight="400">idea_protein_id</text>
+<text x="622" y="300" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="381" y="306" width="248" height="20" fill="#f8fafc"/>
+<text x="388" y="320" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="320" fill="#0f172a" font-size="10.5" font-weight="400">idea_mutant_id</text>
+<text x="622" y="320" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="380" y="360" width="250" height="126" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M380,367 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#7c3aed"/>
+<text x="390" y="378" fill="#fff" font-size="12.5" font-weight="700">sample_reactant</text>
+<text x="622" y="378" fill="#e2e8f0" font-size="10" text-anchor="end">54 rows</text>
+<text x="388" y="400" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="410" y="400" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="622" y="400" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="381" y="406" width="248" height="20" fill="#f8fafc"/>
+<text x="388" y="420" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="420" fill="#0f172a" font-size="10.5" font-weight="400">sample_id</text>
+<text x="622" y="420" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="388" y="440" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="440" fill="#0f172a" font-size="10.5" font-weight="400">idea_reactant_id</text>
+<text x="622" y="440" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="381" y="446" width="248" height="20" fill="#f8fafc"/>
+<text x="410" y="460" fill="#0f172a" font-size="10.5" font-weight="400">concentration</text>
+<text x="622" y="460" fill="#94a3b8" font-size="9" text-anchor="end">real</text>
+<text x="410" y="480" fill="#0f172a" font-size="10.5" font-weight="400">concentration_unit</text>
+<text x="622" y="480" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="380" y="520" width="250" height="106" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M380,527 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#7c3aed"/>
+<text x="390" y="538" fill="#fff" font-size="12.5" font-weight="700">sample_reaction</text>
+<text x="622" y="538" fill="#e2e8f0" font-size="10" text-anchor="end">54 rows</text>
+<text x="388" y="560" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="410" y="560" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="622" y="560" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="381" y="566" width="248" height="20" fill="#f8fafc"/>
+<text x="388" y="580" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="580" fill="#0f172a" font-size="10.5" font-weight="400">sample_id</text>
+<text x="622" y="580" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="388" y="600" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="410" y="600" fill="#0f172a" font-size="10.5" font-weight="400">idea_reaction_id</text>
+<text x="622" y="600" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="381" y="606" width="248" height="20" fill="#f8fafc"/>
+<text x="410" y="620" fill="#0f172a" font-size="10.5" font-weight="400">is_primary</text>
+<text x="622" y="620" fill="#94a3b8" font-size="9" text-anchor="end">boolean</text>
+<rect x="720" y="40" width="250" height="146" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,47 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="58" fill="#fff" font-size="12.5" font-weight="700">idea_experiment</text>
+<text x="962" y="58" fill="#e2e8f0" font-size="10" text-anchor="end">1 rows</text>
+<text x="728" y="80" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="80" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="80" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="86" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="100" fill="#0f172a" font-size="10.5" font-weight="400">start_date</text>
+<text x="962" y="100" fill="#94a3b8" font-size="9" text-anchor="end">date</text>
+<text x="750" y="120" fill="#0f172a" font-size="10.5" font-weight="400">type</text>
+<text x="962" y="120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="126" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="140" fill="#0f172a" font-size="10.5" font-weight="400">index_num</text>
+<text x="962" y="140" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<text x="750" y="160" fill="#0f172a" font-size="10.5" font-weight="400">description</text>
+<text x="962" y="160" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="166" width="248" height="20" fill="#f8fafc"/>
+<text x="728" y="180" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="180" fill="#0f172a" font-size="10.5" font-weight="400">procedure_id</text>
+<text x="962" y="180" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="220" width="250" height="186" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,227 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="238" fill="#fff" font-size="12.5" font-weight="700">idea_mutant</text>
+<text x="962" y="238" fill="#e2e8f0" font-size="10" text-anchor="end">21 rows</text>
+<text x="728" y="260" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="260" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="260" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="266" width="248" height="20" fill="#f8fafc"/>
+<text x="728" y="280" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="280" fill="#0f172a" font-size="10.5" font-weight="400">idea_protein_id</text>
+<text x="962" y="280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="300" fill="#0f172a" font-size="10.5" font-weight="400">mutations</text>
+<text x="962" y="300" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="306" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="320" fill="#0f172a" font-size="10.5" font-weight="400">aa_sequence</text>
+<text x="962" y="320" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="340" fill="#0f172a" font-size="10.5" font-weight="400">dna_sequence</text>
+<text x="962" y="340" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="346" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="360" fill="#0f172a" font-size="10.5" font-weight="400">design_method</text>
+<text x="962" y="360" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="728" y="380" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="380" fill="#0f172a" font-size="10.5" font-weight="400">ai_design_id</text>
+<text x="962" y="380" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="386" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="400" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="962" y="400" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="440" width="250" height="226" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,447 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="458" fill="#fff" font-size="12.5" font-weight="700">idea_protein</text>
+<text x="962" y="458" fill="#e2e8f0" font-size="10" text-anchor="end">1 rows</text>
+<text x="728" y="480" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="480" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="480" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="486" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="500" fill="#0f172a" font-size="10.5" font-weight="400">kb_protein_id</text>
+<text x="962" y="500" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="520" fill="#0f172a" font-size="10.5" font-weight="400">kb_genome_id</text>
+<text x="962" y="520" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="526" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="540" fill="#0f172a" font-size="10.5" font-weight="400">name</text>
+<text x="962" y="540" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="560" fill="#0f172a" font-size="10.5" font-weight="400">aa_sequence</text>
+<text x="962" y="560" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="566" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="580" fill="#0f172a" font-size="10.5" font-weight="400">dna_sequence</text>
+<text x="962" y="580" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="600" fill="#0f172a" font-size="10.5" font-weight="400">structure_url</text>
+<text x="962" y="600" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="606" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="620" fill="#0f172a" font-size="10.5" font-weight="400">source_organism</text>
+<text x="962" y="620" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="640" fill="#0f172a" font-size="10.5" font-weight="400">source_type</text>
+<text x="962" y="640" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="646" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="660" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="962" y="660" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="700" width="250" height="226" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,707 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="718" fill="#fff" font-size="12.5" font-weight="700">idea_reactant</text>
+<text x="962" y="718" fill="#e2e8f0" font-size="10" text-anchor="end">8 rows</text>
+<text x="728" y="740" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="740" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="740" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="746" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="760" fill="#0f172a" font-size="10.5" font-weight="400">kb_metabolite_id</text>
+<text x="962" y="760" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="780" fill="#0f172a" font-size="10.5" font-weight="400">name</text>
+<text x="962" y="780" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="786" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="800" fill="#0f172a" font-size="10.5" font-weight="400">aliases</text>
+<text x="962" y="800" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="820" fill="#0f172a" font-size="10.5" font-weight="400">smiles</text>
+<text x="962" y="820" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="826" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="840" fill="#0f172a" font-size="10.5" font-weight="400">inchi</text>
+<text x="962" y="840" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="860" fill="#0f172a" font-size="10.5" font-weight="400">inchi_key</text>
+<text x="962" y="860" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="866" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="880" fill="#0f172a" font-size="10.5" font-weight="400">molecular_formula</text>
+<text x="962" y="880" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="900" fill="#0f172a" font-size="10.5" font-weight="400">molecular_weight</text>
+<text x="962" y="900" fill="#94a3b8" font-size="9" text-anchor="end">real</text>
+<rect x="721" y="906" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="920" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="962" y="920" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="960" width="250" height="166" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,967 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="978" fill="#fff" font-size="12.5" font-weight="700">idea_reaction</text>
+<text x="962" y="978" fill="#e2e8f0" font-size="10" text-anchor="end">3 rows</text>
+<text x="728" y="1000" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="1000" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="1000" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1006" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1020" fill="#0f172a" font-size="10.5" font-weight="400">kb_reaction_id</text>
+<text x="962" y="1020" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="1040" fill="#0f172a" font-size="10.5" font-weight="400">name</text>
+<text x="962" y="1040" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1046" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1060" fill="#0f172a" font-size="10.5" font-weight="400">equation</text>
+<text x="962" y="1060" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="1080" fill="#0f172a" font-size="10.5" font-weight="400">smarts</text>
+<text x="962" y="1080" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1086" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1100" fill="#0f172a" font-size="10.5" font-weight="400">reaction_type</text>
+<text x="962" y="1100" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="1120" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="962" y="1120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="1160" width="250" height="206" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,1167 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="1178" fill="#fff" font-size="12.5" font-weight="700">idea_sample</text>
+<text x="962" y="1178" fill="#e2e8f0" font-size="10" text-anchor="end">27 rows</text>
+<text x="728" y="1200" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="1200" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="1200" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1206" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1220" fill="#0f172a" font-size="10.5" font-weight="400">name</text>
+<text x="962" y="1220" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="728" y="1240" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="1240" fill="#0f172a" font-size="10.5" font-weight="400">experiment_id</text>
+<text x="962" y="1240" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1246" width="248" height="20" fill="#f8fafc"/>
+<text x="728" y="1260" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="1260" fill="#0f172a" font-size="10.5" font-weight="400">strain_id</text>
+<text x="962" y="1260" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="728" y="1280" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="1280" fill="#0f172a" font-size="10.5" font-weight="400">procedure_id</text>
+<text x="962" y="1280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1286" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1300" fill="#0f172a" font-size="10.5" font-weight="400">replicate</text>
+<text x="962" y="1300" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<text x="728" y="1320" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="1320" fill="#0f172a" font-size="10.5" font-weight="400">parent_sample_id</text>
+<text x="962" y="1320" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1326" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1340" fill="#0f172a" font-size="10.5" font-weight="400">storage_location</text>
+<text x="962" y="1340" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="1360" fill="#0f172a" font-size="10.5" font-weight="400">notes</text>
+<text x="962" y="1360" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="720" y="1400" width="250" height="106" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M720,1407 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#2563eb"/>
+<text x="730" y="1418" fill="#fff" font-size="12.5" font-weight="700">idea_strain</text>
+<text x="962" y="1418" fill="#e2e8f0" font-size="10" text-anchor="end">2 rows</text>
+<text x="728" y="1440" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="750" y="1440" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="962" y="1440" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1446" width="248" height="20" fill="#f8fafc"/>
+<text x="750" y="1460" fill="#0f172a" font-size="10.5" font-weight="400">long_name</text>
+<text x="962" y="1460" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="750" y="1480" fill="#0f172a" font-size="10.5" font-weight="400">short_name</text>
+<text x="962" y="1480" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="721" y="1486" width="248" height="20" fill="#f8fafc"/>
+<text x="728" y="1500" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="750" y="1500" fill="#0f172a" font-size="10.5" font-weight="400">parent_strain_id</text>
+<text x="962" y="1500" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1060" y="40" width="250" height="146" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M1060,47 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#64748b"/>
+<text x="1070" y="58" fill="#fff" font-size="12.5" font-weight="700">idea_dbxref</text>
+<text x="1302" y="58" fill="#e2e8f0" font-size="10" text-anchor="end">13 rows</text>
+<text x="1068" y="80" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="1090" y="80" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="1302" y="80" fill="#94a3b8" font-size="9" text-anchor="end">integer</text>
+<rect x="1061" y="86" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="100" fill="#0f172a" font-size="10.5" font-weight="400">entity_type</text>
+<text x="1302" y="100" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1090" y="120" fill="#0f172a" font-size="10.5" font-weight="400">entity_id</text>
+<text x="1302" y="120" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="126" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="140" fill="#0f172a" font-size="10.5" font-weight="400">database_name</text>
+<text x="1302" y="140" fill="#94a3b8" font-size="9" text-anchor="end">text,</text>
+<text x="1090" y="160" fill="#0f172a" font-size="10.5" font-weight="400">accession</text>
+<text x="1302" y="160" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="166" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="180" fill="#0f172a" font-size="10.5" font-weight="400">url</text>
+<text x="1302" y="180" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1060" y="220" width="250" height="86" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M1060,227 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#64748b"/>
+<text x="1070" y="238" fill="#fff" font-size="12.5" font-weight="700">idea_lab</text>
+<text x="1302" y="238" fill="#e2e8f0" font-size="10" text-anchor="end">2 rows</text>
+<text x="1068" y="260" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="1090" y="260" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="1302" y="260" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="266" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="280" fill="#0f172a" font-size="10.5" font-weight="400">name</text>
+<text x="1302" y="280" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1090" y="300" fill="#0f172a" font-size="10.5" font-weight="400">location</text>
+<text x="1302" y="300" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1060" y="340" width="250" height="126" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M1060,347 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#64748b"/>
+<text x="1070" y="358" fill="#fff" font-size="12.5" font-weight="700">idea_people</text>
+<text x="1302" y="358" fill="#e2e8f0" font-size="10" text-anchor="end">6 rows</text>
+<text x="1068" y="380" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="1090" y="380" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="1302" y="380" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="386" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="400" fill="#0f172a" font-size="10.5" font-weight="400">first_name</text>
+<text x="1302" y="400" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1090" y="420" fill="#0f172a" font-size="10.5" font-weight="400">last_name</text>
+<text x="1302" y="420" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="426" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="440" fill="#0f172a" font-size="10.5" font-weight="400">email</text>
+<text x="1302" y="440" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1068" y="460" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="1090" y="460" fill="#0f172a" font-size="10.5" font-weight="400">lab_id</text>
+<text x="1302" y="460" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1060" y="500" width="250" height="126" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M1060,507 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#64748b"/>
+<text x="1070" y="518" fill="#fff" font-size="12.5" font-weight="700">idea_procedure</text>
+<text x="1302" y="518" fill="#e2e8f0" font-size="10" text-anchor="end">6 rows</text>
+<text x="1068" y="540" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="1090" y="540" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="1302" y="540" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="546" width="248" height="20" fill="#f8fafc"/>
+<text x="1068" y="560" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="1090" y="560" fill="#0f172a" font-size="10.5" font-weight="400">protocol_id</text>
+<text x="1302" y="560" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1068" y="580" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="1090" y="580" fill="#0f172a" font-size="10.5" font-weight="400">lab_id</text>
+<text x="1302" y="580" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="586" width="248" height="20" fill="#f8fafc"/>
+<text x="1068" y="600" fill="#2563eb" font-size="8.5" font-weight="700">FK</text>
+<text x="1090" y="600" fill="#0f172a" font-size="10.5" font-weight="400">contact_id</text>
+<text x="1302" y="600" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1090" y="620" fill="#0f172a" font-size="10.5" font-weight="400">timestamp</text>
+<text x="1302" y="620" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1060" y="660" width="250" height="86" rx="7" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+<path d="M1060,667 q0,-7 7,-7 h236 q7,0 7,7 v19 h-250 z" fill="#64748b"/>
+<text x="1070" y="678" fill="#fff" font-size="12.5" font-weight="700">idea_protocol</text>
+<text x="1302" y="678" fill="#e2e8f0" font-size="10" text-anchor="end">6 rows</text>
+<text x="1068" y="700" fill="#b45309" font-size="8.5" font-weight="700">PK</text>
+<text x="1090" y="700" fill="#0f172a" font-size="10.5" font-weight="700">id</text>
+<text x="1302" y="700" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<rect x="1061" y="706" width="248" height="20" fill="#f8fafc"/>
+<text x="1090" y="720" fill="#0f172a" font-size="10.5" font-weight="400">description</text>
+<text x="1302" y="720" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="1090" y="740" fill="#0f172a" font-size="10.5" font-weight="400">filename</text>
+<text x="1302" y="740" fill="#94a3b8" font-size="9" text-anchor="end">text</text>
+<text x="40" y="1558" font-size="11" fill="#475569">IDEAS-DB field-level ER · generated 2026-09-23 · edges: blue=declared, teal=strongly-inferred, amber=weakly/unknown</text>
+</svg>

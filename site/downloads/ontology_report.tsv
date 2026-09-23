@@ -1,0 +1,20 @@
+table	field	meaning	ontology_namespace	id_pattern	example	coverage	external_link
+idea_mutant	mutations	Mutation(s) in standard notation, e.g. 'A219M' or 'V213L A215Q'; empty for wild-type.	HGVS-like variant	e.g. A219M (wt-pos-mut)	V213E	100.0%	https://varnomen.hgvs.org/
+idea_protein	kb_protein_id	KBase protein	KBase protein	KBase workspace object ref		0.0%	https://www.kbase.us/
+idea_protein	kb_genome_id	KBase genome	KBase genome	KBase workspace object ref		0.0%	https://www.kbase.us/
+idea_protein	structure_url	Link to a 3-D structure (RCSB PDB) — populated for enzymes with a solved structure (e.g. DesD 7TGM).	RCSB PDB URL	https://www.rcsb.org/structure/<id>		0.0%	https://www.rcsb.org/
+idea_reactant	kb_metabolite_id	ModelSEED/KBase compound	ModelSEED/KBase compound	^cpd\d+ or KBase ref		0.0%	https://modelseed.org/
+idea_reactant	smiles	SMILES structure string.	SMILES	chemical line notation (no fixed regex)	OC(=O)CCCCC(O)=O	50.0%	http://opensmiles.org/
+idea_reactant	inchi	InChI structure string (not yet populated).	InChI	^InChI=1S?/		0.0%	https://www.inchi-trust.org/
+idea_reactant	inchi_key	InChIKey (hashed structure id) — populated for the real monomer/substrate chemicals via PubChem.	InChIKey	^[A-Z]{14}-[A-Z]{10}-[A-Z]$		0.0%	https://www.inchi-trust.org/
+idea_reactant	molecular_formula	Molecular formula — populated for the real monomer/substrate chemicals via PubChem.	Molecular formula	Hill notation (e.g. C6H12O6)	C6H10O4	62.5%	https://en.wikipedia.org/wiki/Chemical_formula#Hill_system
+idea_reaction	kb_reaction_id	ModelSEED/KBase reaction	ModelSEED/KBase reaction	^rxn\d+ or KBase ref		0.0%	https://modelseed.org/
+idea_reaction	smarts	Reaction SMARTS pattern (not yet populated).	SMARTS	substructure / reaction pattern		0.0%	https://www.daylight.com/dayhtml/doc/theory/theory.smarts.html
+idea_dbxref	accession[ChEBI]	external cross-reference (idea_reactant)	ChEBI	registry accession	CHEBI:30832	2 record(s)	https://www.ebi.ac.uk/chebi
+idea_dbxref	accession[KEGG]	external cross-reference (idea_reaction)	KEGG	registry accession	R00000	1 record(s)	https://www.kegg.jp
+idea_dbxref	accession[MetaCyc]	external cross-reference (idea_reaction)	MetaCyc	registry accession	RXN-12345	1 record(s)	https://metacyc.org
+idea_dbxref	accession[NCBI_Protein]	external cross-reference (idea_protein)	NCBI_Protein	registry accession	WP_012345678.1	1 record(s)	https://www.ncbi.nlm.nih.gov/protein
+idea_dbxref	accession[ORNL_LIMS]	external cross-reference (idea_experiment, idea_measurement, idea_sample)	ORNL_LIMS	registry accession	DM-2026-001-C1	4 record(s)	(internal ORNL LIMS — no public endpoint)
+idea_dbxref	accession[PDB]	external cross-reference (idea_protein)	PDB	registry accession	8ABC	1 record(s)	https://www.rcsb.org
+idea_dbxref	accession[PubChem]	external cross-reference (idea_reactant)	PubChem	registry accession	196	2 record(s)	https://pubchem.ncbi.nlm.nih.gov
+idea_dbxref	accession[UniProt]	external cross-reference (idea_protein)	UniProt	registry accession	A0A000XYZ1	1 record(s)	https://www.uniprot.org

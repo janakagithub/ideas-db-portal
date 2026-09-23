@@ -893,34 +893,65 @@ function renderQuality(v){
 /* =============================================================== Download */
 function renderDownload(v){
   v.append(el("h2",{},"Download the data"));
-  v.append(el("p",{class:"sec-intro"},"The full dataset is available as a single SQL dump, a ready-to-query SQLite database, the enriched data dictionary, and the original Parquet source files. Everything is generated directly from the source data in this portal."));
+  v.append(el("p",{class:"sec-intro"},"Everything below is generated directly from the source data by the portal's reproducible pipeline (<code>analyze.py</code> + <code>generate_exports.py</code>): the full database, the field-level data dictionary, dbdiagram.io-compatible schema exports, ER-diagram images, and per-topic reports."));
 
-  const items=[
-    ["ideas_dump.sql","SQL dump (schema + all data)","downloads/ideas_dump.sql",
-      "Complete SQLite-dialect dump: CREATE TABLE statements plus every row. Load with <code>sqlite3 ideas.db &lt; ideas_dump.sql</code>.","db"],
-    ["ideas.db","SQLite database","downloads/ideas.db",
-      "Ready-to-query SQLite file (all 21 tables). Open with <code>sqlite3 ideas.db</code>, DB Browser, or pandas/duckdb.","db"],
-    ["data_dictionary.csv","Data dictionary (CSV)","downloads/data_dictionary.csv",
-      "Every field with type, keys, description, ontology, distinct/missing counts and interpretation confidence.","csv"],
-    ["data_dictionary.enriched.json","Data dictionary (JSON)","downloads/data_dictionary.enriched.json",
-      "The same dictionary as structured JSON, including numeric ranges and allowed-value enumerations.","json"],
-    ["metadata.json","Full portal metadata (JSON)","downloads/metadata.json",
-      "The complete analysis bundle powering this site: tables, stats, relationships, findings, units, cross-refs and all rows.","json"],
-    ["ideas_db_source.zip","Original source files (ZIP)","downloads/ideas_db_source.zip",
-      "All original Parquet files, the SQL schema (<code>ideas_min_schema.sql</code>), the shipped data dictionary and design docs.","zip"],
+  const groups=[
+    ["Database", [
+      ["ideas_dump.sql","SQL dump (schema + all data)","downloads/ideas_dump.sql",
+        "Complete SQLite-dialect dump: CREATE TABLE statements plus every row. Restore with <code>sqlite3 ideas.db &lt; ideas_dump.sql</code>.","db"],
+      ["ideas.db","SQLite database","downloads/ideas.db",
+        "Ready-to-query SQLite file (all 21 tables). Open with <code>sqlite3 ideas.db</code>, DB Browser, or pandas/duckdb.","db"],
+      ["ideas_db_source.zip","Original source files (ZIP)","downloads/ideas_db_source.zip",
+        "All original Parquet files, the SQL schema (<code>ideas_min_schema.sql</code>), the shipped data dictionary and design docs.","zip"],
+      ["metadata.json","Full portal metadata (JSON)","downloads/metadata.json",
+        "The complete analysis bundle powering this site: tables, stats, relationships, findings, units, cross-refs and all rows.","json"],
+    ]],
+    ["Data dictionary", [
+      ["data_dictionary.csv","Data dictionary (CSV)","downloads/data_dictionary.csv",
+        "Every field with type, keys, description, ontology, distinct/missing counts and interpretation confidence.","csv"],
+      ["data_dictionary.tsv","Data dictionary (TSV)","downloads/data_dictionary.tsv",
+        "The same field-level dictionary, tab-separated for spreadsheet / awk pipelines.","csv"],
+      ["data_dictionary.enriched.json","Data dictionary (JSON)","downloads/data_dictionary.enriched.json",
+        "Structured JSON dictionary including numeric ranges and allowed-value enumerations.","json"],
+      ["DATA_DICTIONARY.md","Data dictionary (Markdown)","downloads/DATA_DICTIONARY.md",
+        "Human-readable dictionary organised by table: purpose, primary key, foreign keys and every field.","file"],
+    ]],
+    ["Schema & ER diagram", [
+      ["schema.dbml","DBML schema","downloads/schema.dbml",
+        "Paste into <a href='https://dbdiagram.io/' target='_blank' rel='noopener'>dbdiagram.io</a> to render the full ERD. Includes intended types, PKs and every relationship (with status/match notes).","file"],
+      ["schema_relationships.json","Relationships (JSON)","downloads/schema_relationships.json",
+        "All 34 relationships: source/target field, type, status, match rate and orphan counts.","json"],
+      ["SCHEMA_RELATIONSHIPS.md","Relationships (Markdown)","downloads/SCHEMA_RELATIONSHIPS.md",
+        "The relationship tree grouped by parent table, plus a full relationship reference table.","file"],
+      ["schema.svg","ER diagram (SVG)","downloads/schema.svg",
+        "Static field-level ER diagram — vector, scalable. <a href='downloads/schema.svg' target='_blank' rel='noopener'>Open in a new tab →</a>","file"],
+      ["schema.png","ER diagram (PNG)","downloads/schema.png",
+        "Rasterised field-level ER diagram (2160×2370) for slides and docs.","file"],
+    ]],
+    ["Reports", [
+      ["units_report.tsv","Units report (TSV)","downloads/units_report.tsv",
+        "Every measured parameter → unit → physical quantity → UCUM code, plus a per-unit occurrence summary.","csv"],
+      ["ontology_report.tsv","Ontology report (TSV)","downloads/ontology_report.tsv",
+        "Each identifier/notation field → namespace, ID pattern, example, coverage % and registry link (SMILES, InChI, KBase/ModelSEED, UniProt, PDB, ChEBI, KEGG, …).","csv"],
+      ["data_quality_report.tsv","Data-quality report (TSV)","downloads/data_quality_report.tsv",
+        "All consistency findings with severity, affected table, explanation and suggested action.","csv"],
+    ]],
   ];
-  const grid=el("div",{class:"dlgrid"});
   const fileSize={}; M.files.forEach(f=>fileSize[f.name]=f.bytes);
-  items.forEach(([name,title,href,desc,kind])=>{
-    const c=el("a",{class:"dl",href,download:name,style:"text-decoration:none;color:inherit"});
-    c.append(el("div",{class:"ic",html:ICON[kind]||ICON.file}));
-    const body=el("div",{style:"flex:1"});
-    body.append(el("h4",{},[title," ",el("span",{class:"pill inferred"},"↓")]));
-    body.append(el("div",{html:desc,class:"ink2",style:"font-size:.82rem;margin:.1rem 0 .3rem"}));
-    body.append(el("div",{class:"sz"},esc(name)));
-    c.append(body); grid.append(c);
+  groups.forEach(([gname,items])=>{
+    v.append(el("h3",{},gname));
+    const grid=el("div",{class:"dlgrid"});
+    items.forEach(([name,title,href,desc,kind])=>{
+      const c=el("a",{class:"dl",href,download:name,style:"text-decoration:none;color:inherit"});
+      c.append(el("div",{class:"ic",html:ICON[kind]||ICON.file}));
+      const body=el("div",{style:"flex:1"});
+      body.append(el("h4",{},[title," ",el("span",{class:"pill inferred"},"↓")]));
+      body.append(el("div",{html:desc,class:"ink2",style:"font-size:.82rem;margin:.1rem 0 .3rem"}));
+      body.append(el("div",{class:"sz"},esc(name)));
+      c.append(body); grid.append(c);
+    });
+    v.append(grid);
   });
-  v.append(grid);
 
   v.append(el("h3",{},"Quick start"));
   v.append(el("pre",{},
