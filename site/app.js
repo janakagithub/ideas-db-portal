@@ -44,9 +44,10 @@ let M = null;          // metadata
 let TBL = {};          // name -> table object
 
 const VIEWS = [
-  ["overview","Overview"], ["schema","Schema & ERD"], ["tables","Tables"],
+  ["overview","Overview"], ["project","The Project"], ["schema","Schema & ERD"], ["tables","Tables"],
   ["dict","Data Dictionary"], ["rel","Relationships"], ["measure","Measurements"],
-  ["onto","Ontologies & Units"], ["quality","Data Quality"], ["download","Download"],
+  ["onto","Ontologies & Units"], ["quality","Data Quality"], ["explore","Iceberg & Files"],
+  ["download","Download"],
 ];
 
 /* =============================================================== boot */
@@ -82,9 +83,9 @@ function route(){
   const app=$("#app"); app.innerHTML="";
   const view = el("section",{class:"view on",id:"view-"+id});
   app.append(view);
-  ({overview:renderOverview,schema:renderSchema,tables:renderTables,dict:renderDict,
+  ({overview:renderOverview,project:renderProject,schema:renderSchema,tables:renderTables,dict:renderDict,
     rel:renderRel,measure:renderMeasure,onto:renderOnto,quality:renderQuality,
-    download:renderDownload}[id]||renderOverview)(view,arg);
+    explore:renderExplore,download:renderDownload}[id]||renderOverview)(view,arg);
   window.scrollTo(0,0);
 }
 
@@ -200,13 +201,14 @@ function renderOverview(v){
     stat(M.total_columns,"Columns","across all tables"),
     stat(rel.length,"Relationships",`${rel.filter(r=>r.status==="declared").length} declared · ${rel.filter(r=>r.status==="inferred").length} inferred`),
     stat(Object.keys(M.dbxref_summary).length,"Cross-ref DBs","PubChem, PDB, UniProt…"),
-    stat(Object.keys(M.units_used).length,"Distinct units","mg/L, mM, %, …"),
+    stat(Object.keys(M.units_used).length,"Distinct units","intensity, mg/L, %"),
   );
 
+  const nInf=M.relationships.filter(r=>r.status==="inferred").length;
   const about=el("div",{class:"card"});
   about.innerHTML = `<h3 style="margin-top:0">About this dataset</h3>
-   <p class="ink2" style="max-width:74ch">This is the <b>IDEAS lakehouse tenant</b> minimal typed schema, derived from the <code>v9</code> prototype and prepared to support a JACS publication (Zenodo deposit, <code>ja-2026-03464t</code>). It records the enzymes and engineered variants studied, the substrates and synthesized products, the reactions and their stoichiometry, the assay samples/replicates, and every measured value — titers, mass-spec intensities, conversion percentages and fold-change-to-wild-type.</p>
-   <div class="legend"><span><span class="dot" style="background:var(--good)"></span>715 pilot rows · zero-orphan FK backbone (design)</span>
+   <p class="ink2" style="max-width:76ch">This is the <b>IDEAS</b> enzyme-engineering dataset, loaded from the <code>tetrad_v1</code> <b>Apache Iceberg</b> warehouse — a typed, versioned export produced for the DOE <b>BRIDGE</b> project (see <a href="#project">The Project</a>). Every column keeps its real type (integers, reals, dates, booleans, timestamps), and every record carries a stable CURIE identifier (<code>SMP:1</code>, <code>EXP:…</code>). It records the enzymes and their engineered variants, the substrates and synthesized products, the reactions and their stoichiometry, the assay samples/replicates, and — its focus — every measured value: mass-spec intensities, titers and conversion percentages.</p>
+   <div class="legend"><span><span class="dot" style="background:var(--good)"></span>${fmt(M.total_rows)} typed rows · ${nInf}/${M.relationships.length} foreign keys resolve at 100% coverage</span>
    <span><span class="dot" style="background:var(--warn)"></span>${M.findings.filter(f=>f.severity==="warning").length} consistency notes flagged (see Data Quality)</span></div>`;
 
   // file inventory
@@ -225,15 +227,165 @@ function renderOverview(v){
 }
 function human(b){ if(b<1024)return b+" B"; if(b<1048576)return (b/1024).toFixed(1)+" KB"; return (b/1048576).toFixed(1)+" MB"; }
 
+/* =============================================================== The Project (BRIDGE) */
+function renderProject(v){
+  const P=M.project||{};
+  v.append(el("h2",{},P.name||"The project"));
+  v.append(el("p",{class:"sec-intro"},"A plain-language orientation for anyone new to the project: what it is, what it is trying to do, where it stands, and what happens next — distilled from the team's weekly meeting notes. This page explains the why; the rest of the portal is the what."));
+
+  // mission callout
+  if(P.mission){
+    const mc=el("div",{class:"card",style:"border-left:4px solid var(--accent)"});
+    mc.append(el("div",{class:"kicker"},"Data Modeling Team — mission"));
+    mc.append(el("p",{class:"lead",style:"margin:.3rem 0 0"},P.mission));
+    v.append(mc);
+  }
+
+  const section=(title,items,opts={})=>{
+    if(!items||!items.length) return;
+    const c=el("div",{class:"card"});
+    c.append(el("h3",{style:"margin-top:0"},title));
+    if(opts.intro) c.append(el("p",{class:"ink2",style:"margin-top:0"},opts.intro));
+    const ul=el("ul",{class:"proselist"});
+    items.forEach(x=>ul.append(el("li",{class:"ink2"},x)));
+    c.append(ul); v.append(c);
+  };
+
+  section("What is it?",P.what_is_it);
+  section("Goals",P.goals,{intro:"What the Data Modeling Team is trying to achieve."});
+
+  // BRIDGE base model -> tables
+  if(P.base_classes && P.base_classes.length){
+    const c=el("div",{class:"card"});
+    c.append(el("h3",{style:"margin-top:0"},"The shared data model"));
+    c.append(el("p",{class:"ink2",style:"margin-top:0"},"BRIDGE models every dataset against a small set of base classes. Here is how this IDEAS dataset's tables map onto them — the same backbone every BRIDGE resource shares."));
+    const grid=el("div",{class:"dlgrid"});
+    P.base_classes.forEach(bc=>{
+      const [nm,desc,tbls]=bc;
+      const d=el("div",{class:"dl",style:"cursor:default"});
+      const body=el("div",{style:"flex:1"});
+      body.append(el("h4",{},nm));
+      body.append(el("div",{class:"ink2",style:"font-size:.84rem;margin:.15rem 0"},desc));
+      const tagwrap=el("div",{style:"display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.25rem"});
+      (tbls||[]).forEach(tn=>tagwrap.append(
+        TBL[tn]? el("a",{href:"#tables/"+tn,class:"tag mono"},tn) : el("span",{class:"tag mono muted",title:"not in this release"},tn)
+      ));
+      if(!tbls||!tbls.length) tagwrap.append(el("span",{class:"muted"},"—"));
+      body.append(tagwrap);
+      d.append(body); grid.append(d);
+    });
+    c.append(grid); v.append(c);
+  }
+
+  section("Progress so far",P.progress,{intro:"Where the project stands today."});
+  section("Immediate next goals",P.immediate,{intro:"What the team is working toward right now."});
+  section("How this IDEAS dataset fits in",P.how_ideas_fits);
+
+  if(P.source) v.append(el("p",{class:"muted"},"Source: "+P.source));
+}
+
+/* =============================================================== Iceberg & Files (explore + download typed data) */
+function renderExplore(v){
+  const IB=M.iceberg||{tables:[]};
+  v.append(el("h2",{},"Iceberg warehouse & files"));
+  v.append(el("p",{class:"sec-intro",html:'This dataset ships as an <b>Apache Iceberg v2</b> warehouse: each table is a folder of columnar <b>Parquet</b> data files plus a <code>metadata/</code> tree (a chain of <code>metadata.json</code> versions, Avro manifest &amp; snapshot files) that records its full <b>snapshot history</b>. Iceberg gives every table schema evolution, ACID snapshots and time-travel. Below you can inspect each table\'s snapshots and current files, and download the whole warehouse or per-table Parquet.'}));
+
+  // downloads first (what the user asked for)
+  const dl=el("div",{class:"card"});
+  dl.append(el("h3",{style:"margin-top:0"},"Download & explore"));
+  const dlgrid=el("div",{class:"dlgrid"});
+  const item=(title,desc,href,name,kind)=>{
+    const c=el("a",{class:"dl",href,download:name,style:"text-decoration:none;color:inherit"});
+    c.append(el("div",{class:"ic",html:ICON[kind]||ICON.file}));
+    const body=el("div",{style:"flex:1"});
+    body.append(el("h4",{},[title," ",el("span",{class:"pill inferred"},"↓")]));
+    body.append(el("div",{html:desc,class:"ink2",style:"font-size:.82rem;margin:.1rem 0 .3rem"}));
+    body.append(el("div",{class:"sz"},esc(name)));
+    c.append(body); return c;
+  };
+  dlgrid.append(item("Full Iceberg warehouse (ZIP)",
+    "Every table's Parquet data + Iceberg metadata (all snapshots). Open with PyIceberg, Spark, or DuckDB's <code>iceberg</code> extension.",
+    "downloads/tetrad_v1_iceberg.zip","tetrad_v1_iceberg.zip","zip"));
+  v.append(dl);
+  dl.append(dlgrid);
+
+  // per-table parquet downloads
+  v.append(el("h3",{},"Per-table Parquet (current snapshot)"));
+  v.append(el("p",{class:"muted",style:"margin-top:0"},"Each table's current snapshot as a single typed Parquet file — the quickest way to query one table with pandas / DuckDB / Polars."));
+  const pcols=[
+    {key:"name",label:"Table",cls:"mono",render:r=>el("a",{href:"#tables/"+r.name},r.name),raw:r=>r.name},
+    {key:"rows",label:"Rows",num:true,render:r=>fmt((TBL[r.name]||{}).nrows||0),raw:r=>(TBL[r.name]||{}).nrows||0},
+    {key:"snaps",label:"Snapshots",num:true,render:r=>String(r.n_snapshots),raw:r=>r.n_snapshots},
+    {key:"files",label:"Data files",num:true,render:r=>String(r.current_data_files.length),raw:r=>r.current_data_files.length},
+    {key:"bytes",label:"Size",num:true,render:r=>human(r.current_bytes),raw:r=>r.current_bytes},
+    {key:"dl",label:"Parquet",render:r=>el("a",{href:"downloads/parquet/"+r.name+".parquet",download:r.name+".parquet",class:"tag"},"↓ "+r.name+".parquet"),raw:r=>r.name},
+  ];
+  v.append(sortableTable(pcols,IB.tables,{placeholder:"Search tables…",sort:"bytes",dir:-1}));
+
+  // snapshot history explorer
+  v.append(el("h3",{},"Snapshot history"));
+  v.append(el("p",{class:"muted",style:"margin-top:0"},"Every Iceberg table here has a chain of snapshots (append / overwrite / delete operations). The current snapshot is highlighted; only it is loaded into the portal. Pick a table to see its timeline."));
+  let cur=IB.tables[0]?IB.tables[0].name:null;
+  const sel=selectFilter("Choose a table",IB.tables.map(t=>t.name),val=>{cur=val||(IB.tables[0]&&IB.tables[0].name);drawSnaps();});
+  const controls=el("div",{class:"controls"}); controls.append(sel.node); v.append(controls);
+  const snapHost=el("div"); v.append(snapHost);
+  function drawSnaps(){
+    snapHost.innerHTML="";
+    const it=IB.tables.find(x=>x.name===cur); if(!it) return;
+    const meta=el("dl",{class:"kv"});
+    const add=(k,val)=>{meta.append(el("dt",{},k),el("dd",{},val));};
+    add("Format",`Iceberg v${it.format_version}`);
+    add("Engine",it.iceberg_version||"—");
+    add("metadata.json versions",String(it.n_metadata_versions));
+    add("Current snapshot",el("span",{class:"mono"},it.current_snapshot));
+    add("Current data files",`${it.current_data_files.length} (${human(it.current_bytes)})`);
+    const card=el("div",{class:"card"}); card.append(el("h4",{style:"margin-top:0;font-family:var(--mono)"},it.name),meta);
+    snapHost.append(card);
+    const scols=[
+      {key:"timestamp",label:"When (UTC)",render:r=>r.timestamp.replace("T"," ").replace("Z","")},
+      {key:"operation",label:"Operation",render:r=>el("span",{class:"pill "+(r.operation==="append"?"declared":r.operation==="delete"?"uncertain":"inferred")},r.operation||"—"),raw:r=>r.operation},
+      {key:"records",label:"Records",num:true,render:r=>fmt(r.records)},
+      {key:"data_files",label:"Data files",num:true},
+      {key:"is_current",label:"Current",render:r=>r.is_current?el("span",{class:"pill declared"},"current"):"",raw:r=>r.is_current?1:0},
+      {key:"snapshot_id",label:"Snapshot ID",cls:"mono"},
+    ];
+    snapHost.append(sortableTable(scols,it.snapshots,{placeholder:"",sort:"timestamp",dir:1}));
+  }
+  drawSnaps();
+
+  // how to read
+  v.append(el("h3",{},"Read it yourself"));
+  v.append(el("pre",{},
+`# DuckDB — query a per-table Parquet directly
+import duckdb
+duckdb.sql("SELECT label, value, unit FROM 'parquet/sample_parameter.parquet' LIMIT 5")
+
+# DuckDB — read the Iceberg table (after unzipping the warehouse)
+duckdb.sql("INSTALL iceberg; LOAD iceberg;")
+duckdb.sql("SELECT * FROM iceberg_scan('tetrad_v1/idea_sample')")
+
+# PyIceberg — load the warehouse catalog and scan a table
+from pyiceberg.catalog import load_catalog   # pip install pyiceberg`));
+}
+
 /* =============================================================== Schema & ERD */
 const NS="http://www.w3.org/2000/svg";
 function svgEl(tag,attrs){ const n=document.createElementNS(NS,tag); if(attrs)for(const k in attrs)n.setAttribute(k,attrs[k]); return n; }
-// intended type -> short label
+// real (duckdb/iceberg) column type -> short label for the ERD
 function typeShort(dt){
-  const m=/\/\s*(.+?)\s*\(intended\)/.exec(dt||"");
-  let t=m?m[1]:"";
-  if(!t||t==="n/a") return "text";
-  return ({TEXT:"text",INTEGER:"int",REAL:"real",NUMERIC:"num",BOOLEAN:"bool",DATE:"date",DATETIME:"datetime",TIMESTAMP:"timestamp"})[t.toUpperCase()] || t.toLowerCase();
+  let t=String(dt||"").trim();
+  if(!t) return "text";
+  const T=t.toUpperCase();
+  if(T.startsWith("DECIMAL")) return "decimal";
+  return ({
+    BIGINT:"int", INTEGER:"int", SMALLINT:"int", TINYINT:"int", HUGEINT:"int",
+    DOUBLE:"real", FLOAT:"real",
+    VARCHAR:"text", TEXT:"text",
+    BOOLEAN:"bool", DATE:"date",
+    "TIMESTAMP WITH TIME ZONE":"timestamptz", TIMESTAMP:"timestamp", DATETIME:"datetime",
+    // legacy "(intended)" fallbacks
+    NUMERIC:"num", REAL:"real", INT:"int",
+  })[T] || t.toLowerCase();
 }
 
 function renderSchema(v){
@@ -307,7 +459,7 @@ function drawERD(){
     const meta={}; (t.col_meta||[]).forEach(c=>meta[c.field_name]=c);
     const fields=t.columns.map(c=>{
       const m=meta[c]||{};
-      return {name:c, pk:m.is_primary_key==="yes", fk:m.is_foreign_key==="yes", type:typeShort(m.data_type)};
+      return {name:c, pk:m.is_primary_key==="yes", fk:m.is_foreign_key==="yes", type:m.short_type||typeShort(m.data_type)};
     });
     const idx={}; t.columns.forEach((c,i)=>idx[c]=i);
     model[t.name]={fields, idx, cat:colBy(t.name), nrows:t.nrows, desc:t.desc||t.name};
@@ -709,8 +861,7 @@ function renderRel(v){
 // Aggregate the EAV measured-value tables into one (parameter × unit) catalogue
 // with numeric summaries. Shared by the Measurements tab and the unit reference.
 function measureCatalogue(){
-  const MEAS=[["sample_parameter","assay condition / readout"],
-              ["protein_parameter","protein / variant metric"]];
+  const MEAS=[["sample_parameter","assay readout (mass-spec intensity / titer / conversion)"]];
   const numRe=/^-?\d+(\.\d+)?([eE][-+]?\d+)?$/;
   const params=[];
   MEAS.forEach(([tn,kind])=>{
@@ -752,9 +903,22 @@ function fmtMeas(x){
   return String(Math.round(x*1e4)/1e4);
 }
 function renderMeasure(v){
-  v.append(el("h2",{},"Measurements"));
-  v.append(el("p",{class:"sec-intro"},"Every measured or experimental quantity in the dataset. Values are stored as label / value / unit triples — assay conditions & readouts in <code>sample_parameter</code>, protein- and variant-level metrics in <code>protein_parameter</code> — so each “parameter” below is one distinct measurement label with its unit, numeric range and coverage. Categories are grouped by the physical quantity of the unit (UCUM-grounded); parameters without a documented unit are shown as categorical/unitless rather than forced into a category."));
+  v.append(el("h2",{},"Measurements & observations"));
+  v.append(el("p",{class:"sec-intro",html:'This is the heart of the dataset and the current focus of the BRIDGE Data Modeling Team (see <a href="#project">The Project</a>). A <b>measurement / observation</b> is a value produced by an <b>instrument or assay</b> against a <b>sample</b>. Here that is modelled in two layers: <code>idea_measurement</code> records each measurement <b>event</b> (what was run, on which sample, from which raw file), and <code>sample_parameter</code> holds the resulting <b>values</b> as label / value / unit rows (the entity–attribute–value pattern), each typed <code>real</code>. Categories below are grouped by the physical quantity of the unit (UCUM-grounded).'}));
 
+  /* ---- measurement events (idea_measurement) ---- */
+  const MM=(M.measurements||{});
+  if(MM.events_by_type && MM.events_by_type.length){
+    v.append(el("h3",{},"Measurement events"));
+    v.append(el("p",{class:"muted",style:"margin-top:0"},`${fmt(MM.n_events)} measurement events in idea_measurement — each is one instrument run against one sample, linked to the values it produced in sample_parameter.`));
+    const ewrap=el("div",{class:"tiles"});
+    MM.events_by_type.forEach(e=>ewrap.append(
+      el("div",{class:"tile"},[el("div",{class:"n"},fmt(e.count)),el("div",{class:"l"},e.type),el("div",{class:"s"},"measurement events")])
+    ));
+    v.append(ewrap);
+  }
+
+  v.append(el("h3",{},"Measured parameters (values)"));
   const params=measureCatalogue();
   const numeric=params.filter(p=>p.numeric);
   const units=new Set(params.filter(p=>p.unit).map(p=>p.unit));
@@ -915,6 +1079,7 @@ const UNIT_REF={
   relative_abundance:{name:"Relative abundance",quantity:"Mass-spec relative abundance (a.u.)",dim:"dimensionless",ucum:"1"},
   intensity:{name:"Intensity",quantity:"Mass-spec intensity (a.u.)",dim:"dimensionless",ucum:"1"},
   "mg/L":{name:"Milligrams per litre",quantity:"Mass concentration / titer",dim:"mass·volume⁻¹",ucum:"mg/L"},
+  "intensity (a.u.)":{name:"Intensity (arbitrary units)",quantity:"Mass-spec peak intensity",dim:"dimensionless (a.u.)",ucum:"{a.u.}"},
 };
 // measurement category per unit (coarse grouping for the Measurements tab, grounded in the unit's physical quantity)
 const UNIT_GROUP={
@@ -927,6 +1092,7 @@ const UNIT_GROUP={
   fold:"Proteomics readout (fold-change)",
   intensity:"Proteomics readout (intensity)",
   ratio:"Ratio / fraction", "%":"Ratio / fraction",
+  "intensity (a.u.)":"Proteomics readout (intensity)",
 };
 // registry home pages for dbxref sources
 const REGISTRY={
@@ -990,48 +1156,26 @@ function renderQuality(v){
 /* =============================================================== Download */
 function renderDownload(v){
   v.append(el("h2",{},"Download the data"));
-  v.append(el("p",{class:"sec-intro"},"Everything below is generated directly from the source data by the portal's reproducible pipeline (<code>analyze.py</code> + <code>generate_exports.py</code>): the full database, the field-level data dictionary, dbdiagram.io-compatible schema exports, ER-diagram images, and per-topic reports."));
+  v.append(el("p",{class:"sec-intro"},"Everything below is generated directly from the typed <code>tetrad_v1</code> Iceberg warehouse by the portal's reproducible pipeline (<code>analyze_iceberg.py</code>): the original warehouse, per-table Parquet, a typed relational database, and the field-level data dictionary. For per-table Parquet and the full snapshot history, see the <a href='#explore'>Iceberg &amp; Files</a> page."));
 
   const groups=[
-    ["Database", [
+    ["Typed data (source)", [
+      ["tetrad_v1_iceberg.zip","Apache Iceberg warehouse (ZIP)","downloads/tetrad_v1_iceberg.zip",
+        "The full source: every table's Parquet data + Iceberg metadata and all snapshots. Read with PyIceberg, Spark, or DuckDB's <code>iceberg</code> extension. Real column types preserved.","zip"],
+      ["ideas.db","SQLite database (typed)","downloads/ideas.db",
+        "All 12 tables as a ready-to-query SQLite file with real types (INTEGER / REAL / TEXT). Open with <code>sqlite3 ideas.db</code>, DB Browser, pandas or DuckDB.","db"],
       ["ideas_dump.sql","SQL dump (schema + all data)","downloads/ideas_dump.sql",
-        "Complete SQLite-dialect dump: CREATE TABLE statements plus every row. Restore with <code>sqlite3 ideas.db &lt; ideas_dump.sql</code>.","db"],
-      ["ideas.db","SQLite database","downloads/ideas.db",
-        "Ready-to-query SQLite file (all 21 tables). Open with <code>sqlite3 ideas.db</code>, DB Browser, or pandas/duckdb.","db"],
-      ["ideas_db_source.zip","Original source files (ZIP)","downloads/ideas_db_source.zip",
-        "All original Parquet files, the SQL schema (<code>ideas_min_schema.sql</code>), the shipped data dictionary and design docs.","zip"],
+        "Complete SQL dump: CREATE TABLE statements plus every row. Restore with <code>sqlite3 ideas.db &lt; ideas_dump.sql</code>.","db"],
       ["metadata.json","Full portal metadata (JSON)","downloads/metadata.json",
-        "The complete analysis bundle powering this site: tables, stats, relationships, findings, units, cross-refs and all rows.","json"],
+        "The complete analysis bundle powering this site: typed schema, stats, relationships, findings, units, cross-refs, Iceberg snapshot history, the BRIDGE project model, and all rows.","json"],
     ]],
     ["Data dictionary", [
       ["data_dictionary.csv","Data dictionary (CSV)","downloads/data_dictionary.csv",
-        "Every field with type, keys, description, ontology, distinct/missing counts and interpretation confidence.","csv"],
+        "Every field with real type, keys, role, description, ontology, distinct/missing counts and interpretation confidence.","csv"],
       ["data_dictionary.tsv","Data dictionary (TSV)","downloads/data_dictionary.tsv",
         "The same field-level dictionary, tab-separated for spreadsheet / awk pipelines.","csv"],
       ["data_dictionary.enriched.json","Data dictionary (JSON)","downloads/data_dictionary.enriched.json",
-        "Structured JSON dictionary including numeric ranges and allowed-value enumerations.","json"],
-      ["DATA_DICTIONARY.md","Data dictionary (Markdown)","downloads/DATA_DICTIONARY.md",
-        "Human-readable dictionary organised by table: purpose, primary key, foreign keys and every field.","file"],
-    ]],
-    ["Schema & ER diagram", [
-      ["schema.dbml","DBML schema","downloads/schema.dbml",
-        "Paste into <a href='https://dbdiagram.io/' target='_blank' rel='noopener'>dbdiagram.io</a> to render the full ERD. Includes intended types, PKs and every relationship (with status/match notes).","file"],
-      ["schema_relationships.json","Relationships (JSON)","downloads/schema_relationships.json",
-        "All 34 relationships: source/target field, type, status, match rate and orphan counts.","json"],
-      ["SCHEMA_RELATIONSHIPS.md","Relationships (Markdown)","downloads/SCHEMA_RELATIONSHIPS.md",
-        "The relationship tree grouped by parent table, plus a full relationship reference table.","file"],
-      ["schema.svg","ER diagram (SVG)","downloads/schema.svg",
-        "Static field-level ER diagram — vector, scalable. <a href='downloads/schema.svg' target='_blank' rel='noopener'>Open in a new tab →</a>","file"],
-      ["schema.png","ER diagram (PNG)","downloads/schema.png",
-        "Rasterised field-level ER diagram (2160×2370) for slides and docs.","file"],
-    ]],
-    ["Reports", [
-      ["units_report.tsv","Units report (TSV)","downloads/units_report.tsv",
-        "Every measured parameter → unit → physical quantity → UCUM code, plus a per-unit occurrence summary.","csv"],
-      ["ontology_report.tsv","Ontology report (TSV)","downloads/ontology_report.tsv",
-        "Each identifier/notation field → namespace, ID pattern, example, coverage % and registry link (SMILES, InChI, KBase/ModelSEED, UniProt, PDB, ChEBI, KEGG, …).","csv"],
-      ["data_quality_report.tsv","Data-quality report (TSV)","downloads/data_quality_report.tsv",
-        "All consistency findings with severity, affected table, explanation and suggested action.","csv"],
+        "Structured JSON dictionary including per-column stats, roles and ontology hints.","json"],
     ]],
   ];
   const fileSize={}; M.files.forEach(f=>fileSize[f.name]=f.bytes);
@@ -1052,14 +1196,13 @@ function renderDownload(v){
 
   v.append(el("h3",{},"Quick start"));
   v.append(el("pre",{},
-`# Query the SQL dump
-sqlite3 ideas.db < ideas_dump.sql
+`# Query the typed SQLite database
 sqlite3 ideas.db "SELECT name, source_organism FROM idea_protein;"
 
-# Or query the parquet directly with duckdb / pandas
-python3 -c "import duckdb; print(duckdb.sql(\\"SELECT label,value,unit FROM 'sample_parameter.parquet' LIMIT 5\\"))"
+# Or query a per-table Parquet directly with duckdb / pandas (see Iceberg & Files)
+python3 -c "import duckdb; print(duckdb.sql(\\"SELECT label,value,unit FROM 'parquet/sample_parameter.parquet' LIMIT 5\\"))"
 
-# Example join: every measured value with its sample and analyte context
+# Example join: every measured value with its sample context
 SELECT s.name AS sample, sp.label, sp.value, sp.unit
 FROM sample_parameter sp
 JOIN idea_sample s ON s.id = sp.sample_id
