@@ -77,8 +77,9 @@ require("./site/app.js");
 
 function fire(ev){ (_win._l[ev]||[]).forEach(f=>f()); }
 setTimeout(()=>{
-  const views = ["overview","project","schema","tables","dict","rel","measure","onto","quality","explore","download",
-                 "tables/idea_protein","tables/sample_parameter","tables/idea_measurement"];
+  const views = ["overview","project","schema","linkml","tables","dict","rel","measure","onto","quality","explore","download",
+                 "tables/idea_protein","tables/sample_parameter","tables/idea_measurement",
+                 "tables/protein_parameter","tables/idea_mutant"];
   let fail=0;
   console.log("nav buttons:", registry.nav.children.length, "| app children after boot:", registry.app.children.length);
   for(const v of views){

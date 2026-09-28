@@ -19,7 +19,8 @@ cp build/metadata.json site/
 mkdir -p site/downloads site/downloads/parquet
 cp build/ideas.db build/ideas_dump.sql build/metadata.json \
    build/data_dictionary.csv build/data_dictionary.enriched.json build/data_dictionary.tsv \
-   build/tetrad_v1_iceberg.zip \
+   build/tetrad_v1_iceberg.zip build/ideas_earlier_parquet.zip \
+   build/ideas.linkml.yaml \
    site/downloads/
 cp build/parquet/*.parquet site/downloads/parquet/
 

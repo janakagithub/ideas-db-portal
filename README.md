@@ -6,7 +6,13 @@ contribution to the DOE **BRIDGE** project). It is a dependency-free, single-pag
 web app that renders everything from one `metadata.json` generated from the typed
 source data.
 
-The dataset ships as an **Apache Iceberg v2** warehouse (`tetrad_v1`), so every
+The portal shows the **union of two releases**: the newer typed **Apache Iceberg v2**
+warehouse (`tetrad_v1`, 12 tables) overlaid on the earlier all-TEXT Parquet release
+(21 tables). The newer release is *reduced* — it dropped 9 tables (including the
+computed protein metrics and the reaction-condition measurements the BRIDGE
+measurements hackathon centres on), so both are merged and **every table, column and
+measured parameter is flagged by which release it came from** (a colour + symbol
+badge: `=` in both, `＋` added in tetrad_v1, `−` earlier-only). From `tetrad_v1` every
 column keeps its **real type** (integers, reals, dates, booleans, timestamps) and
 every record carries a stable **CURIE** identifier (`SMP:1`, `EXP:…`).
 
@@ -21,22 +27,24 @@ every record carries a stable **CURIE** identifier (`SMP:1`, `EXP:…`).
 |------|---------|
 | **Overview** | What data are present; provenance; source-file inventory |
 | **The Project** | Plain-language BRIDGE orientation: what it is, goals, the shared data model, progress, next steps — distilled from the team's meeting notes |
-| **Schema & ERD** | Field-level, draggable ER diagram with PK/FK markers and **real types**; each relationship drawn field→field, coloured by evidence |
+| **Schema & ERD** | Field-level, draggable ER diagram with PK/FK markers, **real types** and release badges; each relationship drawn field→field, coloured by evidence |
+| **Schema (LinkML)** | The dataset modelled in **LinkML** against the BRIDGE base classes — rules checklist, class→base-class map, the attribute/value/unit **Measurement** worked example (the hackathon target), UCUM units, CURIE prefixes, and the full downloadable YAML |
 | **Tables** | Per-table column definitions **and** the actual typed data — searchable, sortable, CSV export |
 | **Data Dictionary** | Every field: real type, keys, role, meaning, examples, ontology, distinct/missing counts, confidence |
 | **Relationships** | How records connect — coverage % and orphan counts for each foreign key |
-| **Measurements & observations** | Measurement **events** (`idea_measurement`) + measured **values** (`sample_parameter`, label/value/unit) with numeric min/median/max, grouped by physical quantity. *The project's current focus.* |
+| **Measurements & observations** | Measurement **events** (`idea_measurement`) + measured **values** across both releases: assay readouts (`sample_parameter`), reaction conditions and computed protein metrics (`protein_parameter`), each label/value/unit with numeric min/median/max and a release badge. Includes the **hackathon framing**. *The project's current focus.* |
 | **Ontologies & Units** | UCUM-coded unit reference, external cross-references (PubChem, PDB, UniProt…), chemical/biological identifier notations |
 | **Data Quality** | Per-table completeness; consistency findings |
 | **Iceberg & Files** | Snapshot history per table; download the **full Iceberg warehouse** or **per-table Parquet**; how to read it (DuckDB / PyIceberg) |
 | **Download** | Iceberg ZIP, typed SQLite DB, SQL dump, data dictionary (CSV/TSV/JSON), full metadata |
 
-## Dataset at a glance
+## Dataset at a glance (union of both releases)
 
-- **12 tables**, **3,247 rows**, 111 columns — typed (`BIGINT`, `VARCHAR`, `DOUBLE`, `DATE`, `BOOLEAN`, `TIMESTAMP WITH TIME ZONE`).
-- **14 foreign keys**, 13 resolving at 100 % coverage.
-- **3 measured units** (mass-spec intensity, mg/L titer, % conversion); **4 external databases** cross-referenced.
-- Source is an **Apache Iceberg v2** export; only each table's current snapshot is loaded, but full snapshot history is browsable and downloadable.
+- **21 tables**, **3,386 rows** — 12 tables in both releases (typed), 9 restored from the earlier release.
+- **22 measured parameters** across both releases: 3 assay readouts (tetrad_v1), 13 reaction conditions + 6 computed protein metrics (earlier).
+- Release changes flagged inline everywhere: **9 tables dropped**, **4 columns added**, **7 columns removed** in tetrad_v1 (see the Overview "What changed between releases" panel).
+- A generated **LinkML schema** (21 classes / 86 slots) mapped to the BRIDGE base model, downloadable as YAML.
+- `tetrad_v1` is an **Apache Iceberg v2** export (typed, current snapshot loaded, full history browsable); the earlier release is all-TEXT Parquet.
 
 ## Repository layout
 

@@ -1,0 +1,356 @@
+id: https://w3id.org/ideas/ideas-schema
+name: ideas_schema
+title: "IDEAS enzyme-engineering dataset (BRIDGE)"
+description: "Auto-generated LinkML schema for the merged IDEAS dataset (Argonne's BRIDGE contribution). Each class specializes a shared BRIDGE base class; measurements use the attribute/value/unit pattern with UCUM-coded units; identifiers are CURIEs; provenance is captured via a ProvenanceMixin."
+license: https://creativecommons.org/licenses/by/4.0/
+default_prefix: ideas
+default_range: string
+prefixes:
+  linkml: "https://w3id.org/linkml/"
+  ideas: "https://w3id.org/ideas/"
+  SMP: "https://w3id.org/ideas/sample/"
+  EXP: "https://w3id.org/ideas/experiment/"
+  PROT: "https://w3id.org/ideas/protein/"
+  RXN: "https://w3id.org/ideas/reaction/"
+  RCT: "https://w3id.org/ideas/reactant/"
+  UO: "http://purl.obolibrary.org/obo/UO_"
+  UCUM: "https://ucum.org/"
+  CHEBI: "http://purl.obolibrary.org/obo/CHEBI_"
+  uniprot: "https://bioregistry.io/uniprot:"
+  pdb: "https://bioregistry.io/pdb:"
+  pubchem.compound: "https://bioregistry.io/pubchem.compound:"
+imports:
+  - linkml:types
+classes:
+  ProvenanceMixin:
+    mixin: true
+    description: "Provenance fields required on ingested records."
+    slots: [created_at, updated_at, created_by]
+  Sample:
+    abstract: true
+    description: "A physical or biological thing that is studied and measured."
+  Observation:
+    abstract: true
+    description: "A measurement EVENT on a sample (an assay run / instrument reading)."
+  MeasurementValue:
+    abstract: true
+    description: "One measured number, modeled as attribute + value + unit (EAV)."
+  Process:
+    abstract: true
+    description: "An activity that acts on samples/entities (reaction, procedure, computation, design)."
+  ReferenceEntity:
+    abstract: true
+    description: "A reusable catalog entity referenced by samples and measurements (protein, reactant, variant)."
+  Association:
+    abstract: true
+    description: "A flat join linking a sample to an entity or process."
+  CrossReference:
+    abstract: true
+    description: "A resolvable link out to an authoritative external database (a PID bridge)."
+  Investigation:
+    abstract: true
+    description: "The overarching study/campaign that groups samples."
+  Agent:
+    abstract: true
+    description: "A person or organization that performed or is responsible for something."
+  ai_design:
+    description: "AI-guided design proposals — the method / model, the proposed mutations and sequence, optimization targets and multi-objective (Pareto) scores, and whether the candidate was picked for testing. (Dropped in tetrad_v1.)"
+    is_a: Process
+    class_uri: ideas:ai_design
+    slots: [id, idea_protein_id, design_method, model_name, proposed_mutations, proposed_sequence, optimization_target, optimization_algorithm, generation, objective_scores, pareto_rank, pareto_optimal, selected_for_testing, design_rationale, run_date, notes]
+  computation:
+    description: "Computational jobs run on a protein / variant / reaction — structure prediction, ML scoring or MD simulation — with model name, compute platform, parameters and the output file. (Dropped in tetrad_v1.)"
+    is_a: Process
+    class_uri: ideas:computation
+    slots: [id, idea_protein_id, idea_mutant_id, idea_reaction_id, procedure_id, type, model_name, compute_platform, simulation_params, run_date, filename, notes]
+  idea_dbxref:
+    description: "Links every IDEAS entity out to an authoritative external database (UniProt, PDB, PubChem, …) via a database name + accession + resolvable URL. The dataset's persistent-identifier bridge."
+    is_a: CrossReference
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_dbxref
+    slots: [id, entity_type, entity_id, database_name, accession, url]
+  idea_experiment:
+    description: "The study (investigation) that produced the samples — here the tetrad oligoamide-synthesis campaign. One row per experiment."
+    is_a: Investigation
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_experiment
+    slots: [id, start_date, type, index_num, description, procedure_id]
+  idea_lab:
+    description: "The laboratories participating in the campaign (name + location). (Dropped in tetrad_v1.)"
+    is_a: Agent
+    class_uri: ideas:idea_lab
+    slots: [id, name, location]
+  idea_measurement:
+    description: "One row per measurement event on a sample (e.g. a mass-spec or LC-MS run), with the assay type and the source data file. The individual numbers produced live in sample_parameter."
+    is_a: Observation
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_measurement
+    slots: [id, sample_id, type, filename, notes, procedure_id]
+  idea_mutant:
+    description: "Engineered protein variants — the mutation list applied to a parent protein, its (optional) sequence, how it was designed and a link to the AI design that proposed it. (Dropped in tetrad_v1.)"
+    is_a: ReferenceEntity
+    class_uri: ideas:idea_mutant
+    slots: [id, idea_protein_id, mutations, aa_sequence, dna_sequence, design_method, ai_design_id, notes]
+  idea_people:
+    description: "People (contacts) associated with the labs and procedures. (Dropped in tetrad_v1.)"
+    is_a: Agent
+    class_uri: ideas:idea_people
+    slots: [id, first_name, last_name, email, lab_id]
+  idea_procedure:
+    description: "A concrete execution of a protocol in a lab by a contact person on a date — the wet/dry-lab procedure record referenced by samples and measurements. (Dropped in tetrad_v1.)"
+    is_a: Process
+    class_uri: ideas:idea_procedure
+    slots: [id, protocol_id, lab_id, contact_id, timestamp]
+  idea_protein:
+    description: "The enzymes (and engineered variants) studied — amino-acid and DNA sequence, source organism, and a link to a predicted/known structure."
+    is_a: ReferenceEntity
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_protein
+    slots: [id, name, aa_sequence, dna_sequence, structure_url, source_organism, source_type, notes, kb_protein_id, kb_genome_id]
+  idea_protocol:
+    description: "Reusable protocol definitions (a method description + an attached file) that procedures instantiate. (Dropped in tetrad_v1.)"
+    is_a: Process
+    class_uri: ideas:idea_protocol
+    slots: [id, description, filename]
+  idea_reactant:
+    description: "The chemical species — substrates, cofactors and synthesized products — with structure notations (SMILES / InChI / InChIKey), molecular formula and weight."
+    is_a: ReferenceEntity
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_reactant
+    slots: [id, name, aliases, smiles, inchi, inchi_key, molecular_formula, molecular_weight, notes, kb_metabolite_id]
+  idea_reaction:
+    description: "The chemical reactions studied, with a human equation and a machine SMARTS reaction pattern."
+    is_a: Process
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_reaction
+    slots: [id, name, equation, smarts, reaction_type, notes, kb_reaction_id]
+  idea_sample:
+    description: "Every assay sample / replicate. The hub of the schema: each sample belongs to an experiment and a strain and is the thing that gets measured, has proteins expressed in it, and has substrates and reactions attached."
+    is_a: Sample
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_sample
+    slots: [id, name, experiment_id, strain_id, replicate, sample_type, parent_sample_id, storage_location, notes, procedure_id]
+  idea_stoichiometry:
+    description: "Which reactants take part in which reaction and in what role (substrate / product) and coefficient — the reaction↔reactant membership table."
+    is_a: Association
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:idea_stoichiometry
+    slots: [id, idea_reaction_id, idea_reactant_id, coefficient, role, notes]
+  idea_strain:
+    description: "Host strains the samples were grown from (e.g. E. coli BL21(DE3)), with a parent-strain self-reference. (Dropped in tetrad_v1.)"
+    is_a: Sample
+    class_uri: ideas:idea_strain
+    slots: [id, long_name, short_name, parent_strain_id]
+  protein_parameter:
+    description: "Computed / structural metrics for a protein or engineered variant — attribute/value/unit rows for ESM-1v scores, AlphaFold pLDDT, MD RMSD, relative abundances and fold-change to wild type. The computational counterpart of sample_parameter (dropped in tetrad_v1)."
+    is_a: MeasurementValue
+    class_uri: ideas:protein_parameter
+    slots: [id, idea_protein_id, idea_mutant_id, label, value, unit, error, measurement_id, computation_id, idea_reaction_id, notes]
+  sample_parameter:
+    description: "The core measured-value table, stored as attribute/value/unit triples: each row is one measured number for one sample (optionally scoped to a reactant and/or reaction) — titer, conversion, mass-spec intensity, …"
+    is_a: MeasurementValue
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:sample_parameter
+    slots: [id, sample_id, idea_reactant_id, idea_reaction_id, label, value, value_type, unit]
+  sample_protein:
+    description: "Which protein (and, where relevant, which engineered variant) is present in each sample — the sample↔protein junction."
+    is_a: Association
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:sample_protein
+    slots: [id, sample_id, idea_protein_id, idea_mutant_id]
+  sample_reactant:
+    description: "Which reactants were added to each sample and at what concentration — the sample↔reactant junction, carrying a typed concentration + unit."
+    is_a: Association
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:sample_reactant
+    slots: [id, sample_id, idea_reactant_id, concentration, concentration_unit]
+  sample_reaction:
+    description: "Which reaction(s) each sample is running, flagging the primary one — the sample↔reaction junction."
+    is_a: Association
+    mixins: [ProvenanceMixin]
+    class_uri: ideas:sample_reaction
+    slots: [id, sample_id, idea_reaction_id, is_primary]
+slots:
+  aa_sequence:
+    range: string
+  accession:
+    range: string
+  ai_design_id:
+    range: string
+  aliases:
+    range: string
+  coefficient:
+    range: float
+  computation_id:
+    range: string
+  compute_platform:
+    range: string
+  concentration:
+    range: float
+  concentration_unit:
+    range: string
+  contact_id:
+    range: string
+  created_at:
+    range: datetime
+    description: "Row creation timestamp (provenance)."
+  created_by:
+    range: string
+    description: "Who/what created the row — here the ETL steward (provenance)."
+  database_name:
+    range: string
+  description:
+    range: string
+  design_method:
+    range: string
+  design_rationale:
+    range: string
+  dna_sequence:
+    range: string
+  email:
+    range: string
+  entity_id:
+    range: string
+  entity_type:
+    range: string
+  equation:
+    range: string
+  error:
+    range: string
+  experiment_id:
+    range: string
+  filename:
+    range: string
+  first_name:
+    range: string
+  generation:
+    range: string
+  id:
+    range: uriorcurie
+    identifier: true
+    id_prefixes: [SMP, EXP, PROT, RXN, RCT]
+    description: "Persistent CURIE identifier for the record."
+  idea_mutant_id:
+    range: string
+  idea_protein_id:
+    range: string
+  idea_reactant_id:
+    range: string
+  idea_reaction_id:
+    range: string
+  inchi:
+    range: string
+  inchi_key:
+    range: string
+  index_num:
+    range: integer
+  is_primary:
+    range: boolean
+  kb_genome_id:
+    range: string
+  kb_metabolite_id:
+    range: string
+  kb_protein_id:
+    range: string
+  kb_reaction_id:
+    range: string
+  lab_id:
+    range: string
+  label:
+    range: string
+    description: "The measured attribute name (EAV attribute)."
+  last_name:
+    range: string
+  location:
+    range: string
+  long_name:
+    range: string
+  measurement_id:
+    range: string
+  model_name:
+    range: string
+  molecular_formula:
+    range: string
+  molecular_weight:
+    range: float
+  mutations:
+    range: string
+  name:
+    range: string
+  notes:
+    range: string
+  objective_scores:
+    range: string
+  optimization_algorithm:
+    range: string
+  optimization_target:
+    range: string
+  parent_sample_id:
+    range: string
+  parent_strain_id:
+    range: string
+  pareto_optimal:
+    range: string
+  pareto_rank:
+    range: string
+  procedure_id:
+    range: string
+  proposed_mutations:
+    range: string
+  proposed_sequence:
+    range: string
+  protocol_id:
+    range: string
+  reaction_type:
+    range: string
+  replicate:
+    range: integer
+  role:
+    range: string
+  run_date:
+    range: string
+  sample_id:
+    range: string
+  sample_type:
+    range: string
+  selected_for_testing:
+    range: string
+  short_name:
+    range: string
+  simulation_params:
+    range: string
+  smarts:
+    range: string
+  smiles:
+    range: string
+  source_organism:
+    range: string
+  source_type:
+    range: string
+  start_date:
+    range: date
+  storage_location:
+    range: string
+  strain_id:
+    range: integer
+  structure_url:
+    range: string
+  timestamp:
+    range: string
+  type:
+    range: string
+  unit:
+    range: string
+    description: "Unit of the measured value; values are coded per UCUM."
+    annotations:
+      ontology: "UCUM / UO"
+  updated_at:
+    range: datetime
+    description: "Row last-updated timestamp (provenance)."
+  url:
+    range: string
+  value:
+    range: string
+    description: "The measured value (EAV value)."
+  value_type:
+    range: string

@@ -212,6 +212,26 @@
   .proselist{max-width:82ch;margin:.3rem 0 0;padding-left:1.15rem;line-height:1.5}
   .proselist li{margin:.35rem 0}
   .tag.muted{opacity:.6}
+
+  /* release-change badges (earlier release vs typed tetrad_v1) */
+  .rls{display:inline-grid;place-items:center;width:1.15em;height:1.15em;border-radius:4px;
+    font-family:var(--mono);font-size:.72rem;font-weight:800;line-height:1;vertical-align:middle;
+    border:1px solid transparent;cursor:help;user-select:none}
+  .rls-both{color:var(--muted);background:var(--surface2);border-color:var(--border)}
+  .rls-new{color:var(--good);background:var(--good-soft);border-color:var(--good)}
+  .rls-old{color:var(--warn);background:var(--warn-soft);border-color:var(--warn)}
+  .rls-legend .rls{margin-right:.1rem}
+  s{text-decoration-color:var(--warn);opacity:.75}
+
+  /* LinkML rules checklist + YAML box */
+  .rulecard{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--good);
+    border-radius:10px;padding:.7rem .85rem;margin:.5rem 0;box-shadow:var(--shadow)}
+  .rulecard .rc-head{display:flex;gap:.5rem;align-items:baseline;font-size:.92rem}
+  .rc-check{color:var(--good);font-weight:800;flex:0 0 auto}
+  .linkml-yaml{margin:.4rem 0 0}
+  .linkml-yaml pre{max-height:560px;overflow:auto;background:var(--surface2);border:1px solid var(--border);
+    border-radius:10px;padding:.9rem 1rem;font-size:.8rem;line-height:1.5;white-space:pre}
+
   hr{border:0;border-top:1px solid var(--border);margin:1.4rem 0}
   .loading{padding:3rem;text-align:center;color:var(--muted)}
   @media(max-width:640px){.hero h1{font-size:1.5rem}.bar{padding:.6rem .8rem}main{padding:1rem .8rem 4rem}}

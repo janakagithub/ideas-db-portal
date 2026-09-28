@@ -1,112 +1,186 @@
-table_name	field_name	data_type	role	is_primary_key	is_foreign_key	foreign_table	foreign_field	unit	ontology	unique_count	missing_count	missing_percent	interpretation_confidence	description	example_values
-idea_dbxref	id	BIGINT	identifier (primary key)	yes						18	0	0.0	high	Cross-reference row identifier.	11; 16; 12; 15; 3; 6
-idea_dbxref	entity_type	VARCHAR	descriptor							2	0	0.0	high	Which kind of entity this cross-reference is for (protein, reactant, …).	reactant; protein
-idea_dbxref	entity_id	VARCHAR	descriptor							18	0	0.0	high	The IDEAS entity id being cross-referenced.	RCT:C8_diamine; RCT:Glutaric_acid; RCT:p_Xylylenediamine; RCT:C7_amino_acid; PROT:SfaB; RCT:5_aminovalerate
-idea_dbxref	database_name	VARCHAR	descriptor							4	0	0.0	high	External database name (UniProt, PDB, PubChem, …).	PDB; GenBank; UniProt; PubChem
-idea_dbxref	accession	VARCHAR	descriptor							18	0	0.0	high	The accession / identifier in that external database.	743; Q81RQ8; 7TGK; A0A0F7RJ52; 138; 24250
-idea_dbxref	url	VARCHAR	descriptor							18	0	0.0	high	Resolvable URL for the external record.	https://pubchem.ncbi.nlm.nih.gov/compound/564; https://www.uniprot.org/uniprotkb/A0A375A990; https://www.uniprot.org/uniprotkb/Q81RQ8; https://pubchem.ncbi.nlm.nih.gov/compound/24250; https://pubchem.ncbi.nlm.nih.gov/compound/196; https://pubchem.ncbi.nlm.nih.gov/compound/743
-idea_dbxref	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	18	100.0	high	Row creation timestamp (provenance).	
-idea_dbxref	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	18	100.0	high	Row last-updated timestamp (provenance).	
-idea_dbxref	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
-idea_experiment	id	VARCHAR	identifier (primary key)	yes						1	0	0.0	high	Experiment identifier (CURIE, e.g. EXP:tetrad-synthesis).	EXP:tetrad-synthesis
-idea_experiment	start_date	DATE	descriptor							0	1	100.0	high	Date the experiment began.	
-idea_experiment	type	VARCHAR	descriptor							0	1	100.0	high	Kind of experiment / campaign.	
-idea_experiment	index_num	BIGINT	descriptor							0	1	100.0	high	Ordinal index of the experiment.	
-idea_experiment	description	VARCHAR	descriptor							1	0	0.0	high	Free-text description of the experiment.	Tetrad-paper in vitro synthesis panels
-idea_experiment	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	1	100.0	high	Row creation timestamp (provenance).	
-idea_experiment	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	1	100.0	high	Row last-updated timestamp (provenance).	
-idea_experiment	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-idea_measurement	id	BIGINT	identifier (primary key)	yes						450	0	0.0	high	Measurement-event identifier.	11; 16; 26; 155; 182; 110
-idea_measurement	sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			450	0	0.0	high	Sample this measurement was taken on.	SMP:267; SMP:359; SMP:362; SMP:373; SMP:388; SMP:312
-idea_measurement	type	VARCHAR	descriptor							2	0	0.0	high	Assay / instrument type (e.g. mass-spec, LC-MS quantitation).	LC-MS quantitation; mass-spec
-idea_measurement	filename	VARCHAR	descriptor							0	450	100.0	high	Source raw/processed data file for this measurement.	
-idea_measurement	notes	VARCHAR	descriptor							0	450	100.0	medium		
-idea_measurement	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row creation timestamp (provenance).	
-idea_measurement	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row last-updated timestamp (provenance).	
-idea_measurement	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-idea_protein	id	VARCHAR	identifier (primary key)	yes						6	0	0.0	high	Protein identifier.	PROT:AcsA; PROT:DdaG; PROT:AsbA; PROT:AsbB; PROT:DesD; PROT:SfaB
-idea_protein	name	VARCHAR	descriptor							6	0	0.0	high	Protein / enzyme name.	DdaG; DesD; AsbA; AcsA; SfaB; AsbB
-idea_protein	aa_sequence	VARCHAR	descriptor							6	0	0.0	high	Amino-acid sequence (one-letter).	MRMDMYHTKILKAIESEDYISVRRRVLRQLVESLIYEGIITPARIEKEEQILFLIQGLDEDNKSVTYECYGRERITFGRISIDSLIVRVQDGKQEIQSVAQFLEEVFRVVNVEQTKLDSFIHELEQTIFKDTIAQYERCNKLKYTQKSYDELENHLIDGHPYHPSYKARIGFQYRDNFRYGYEFMRPIKLIWIAAHKKNATVGYENEVIYDKILKSEVGERKLEAYKERIHSMGCDPKQYLFIPVHPWQWENFIISNYAEDIQDKGIIYLGESADDYCAQQSMRTLRNVTNPKRPYVKVSLNILNTSTLRTLKPYSVASAPAISNWLSNVVSQDSYLRDESRVILLKEFSSVMYDTNKKATYGSLGCIWRESVHHYLGEQEDAVPFNGLYAKEKDGTPIIDAWLNKYGIENWLRLLIQKAIIPVIHLVVEHGIALESHGQNMILVHKEGLPVRIALKDFHEGLEFYRPFLKEMNKCPDFTKMHKTYANGKMNDFFEMDRIECLQEMVLDALFLFNVGELAFVLADKYEWKEESFWMIVVEEIENHFRKYPHLKDRFESIQLYTPTFYAEQLTKRRLYIDVESLVHEVPNPLYRARQLNIQKSVATGGNYANC; MNKGENMNLEMWVQNISATFPWYAQLLRDKQADLSRLESLPLITEELLTQHYYHAENSFPGEHHSYLTSGTTSGKRKRIFYSDNDQRIYLQQRMDIIRDFCGEGHTRACADLGTGHAAATAGEIFQAMGCDVELIDFTRPIEQHIEVLNRFKPDIFFTMPMILDSLIATGKLDFQPKRIILLGDVASLNWQNKVADYFHIQPAQVLDLFGSIEIGSIAFYNHAQKRYQFDSYVRPEVVPVQSLYPGAKYGGDGGILLLTSFAREYFPAVRFVTNDLIEGFAQENVGGRTVYTYQRCLGRFAGEFKHGEKINLSDISDALANNLPYHKYDLADHEGGLVIRIAAKSIPTEVIEAIKHDLLARNPDIAQMISSGLVGDIRIQCVDAQEITGNVSKRRY; MAEFNEMKTTGDKLYHPELRTLVETARFHAERQPETPAILFEGGTTTYGQLHEESNRIAHAIRAAGAAPGTRVAYLGKESAHYYEILFGCAKSGTVLVPINWRLTAHEVSHILQDSGTELLFLEEEFAPILDRLPDGPPATVVRLGVPEGFAAWKAAHPATEPDVDAGPDTPFAQIYTSGTTGLPKGVVLAHRSCFAIRDALASEGLEWIDWRAGDVALVGIPGFHVGGLWWATQNFNAGVTVVVMRAFAAHAAVELIRDLGVTTACVVPAMLRLMLAEPGITPEHFTTLRKIVYGGSPISEALLEESLAMFGSEFAQIYGLTETGNTACCLPPSAHVPGSPRMKAAGHPYPGIRAKVIDAEGRELPTGSVGEVCLHTPARMVEYWGLPDKTAETLVDGWIHTGDAGYVDEDGYVFISDRIKDAVIVAGENVYPAEIENVLEGHPGVADAVVVGAPDERWGETVHAFVVPAPGHEPTPRDLHRFLVDRLASFKLPAAYEFIDEVPRNPSGKILRRELRERFWSGSDRKVN; MENQAINIPPYSHSHYQLACASVMQDLVDCLLAEHFFGPQPLALYRGDEWLAHYGCTTPFGEPAGDARLWRWCCDEREQCHLVLLLRPGITQRWEKVPQTAVYLWQQGGNDWQALEPESFMNRVFAAQQGGQENAKGQALFLDVLTTSVWQTALSQAHRIDTDALMTRTNADFFQVMEQWASLRDRPYHPTAKAKQGLDVQEYCRYVAEFAAPVALNWVAVAKARLQCGDGISDAASQYPARYLLPPAEQAALQQELVARGIADTHIALPVHPWQFDHILEPQLGEVFRHGDCHRLDFSAARYLPTSSLRSMTPCFASADYLKLPMAVYSLGASRYLPAVKMINGGLSERLLRQARAKDALLEQRLYMCDESKWWAFMPPQATLFDEAPRHLSAMVRTYPAELFDNPDYRLLPMAALGTPLPVSRRHFFDDWLAYRGLSADAHGVETLFAELCRCFFDINFRLFRLGMLGEIHGQNAVLVWKAGEAHGVLLRDHDSLRIHVPTLEQHGMQDPVYRIKQGHANTLYHDRLDDLLFWLQTLGIQVNLRAIIDTLAETYALSAARLWQVMQMEINDAIDRTGFSSDTHAMLKTRLFDVPNWPQKLLITPMIARAGGPGSMPFGKGEVINPFQAIMGKSC; MKHAKQIAEHATIQSFLNCYLRETGSGEWITEDKRIEDIFYHLFQRDTCSTYLCCRLSAQNITLYGEVIYKSPTDRHLFGEQFYYQMGDSNSVMKADYVTVITFLIKEMSINYGEGTNPAELMLRVIRSCQNIEEFTKERKEDTSALYGFHTSFIEAEQSLLFGHLTHPTPKSRQGILEWKSAMYSPELKGECQLHYFRAHKSIVNEKSLLLDSTTVILKEELRNDEMVSKEFISKYCNEDEYSLLPIHPLQAEWLLHQPYVQDWIEQGVLEYIGPTGKCYMATSSLRTLYHPDAKYMLKFSFPVKVTNSMRINKLKELESGLEGKAMLNTAIGEVLEKFPGFDFICDPAFITLNYGTQESGFEVIIRENPFYSEHADDATLIAGLVQDAIPGERTRLSNIIHRLADLESRSCEEVSLEWFRRYMNISLKPMVWMYLQYGVALEAHQQNSVVQLKDGYPVKYYFRDNQGFYFCNSMKEMLNNELAGIGERTGNLYDDYIVDERFRYYLIFNHMFGLINGFGTAGLIREEILLTELRTVLESFLPYNREPSTFLRELLEEDKLACKANLLTRFFDVDELSNPLEQAIYVQVQNPLVREVAVRS; MGSSHHHHHHSSGLVPRGSHMSLTDAVAHLSPERWEEANRLLVRKALAEFAHERLFTPEPADGQDGRYVVRSDDGLTSYRFTAVRRALDHWQVDAGSITRTRDGAELPLAALDFFIELRHTLGLSDEILPVYLEEISSTLSGTCYKLTKPQVTAAGLLEGGFQALESGMTEGHPCFVANNGRLGFGVDEYLAYAPETAHPVRLVWLAAHRSRAAFTAGAGIDYASFVRQELGEETVERFDGVLRGRGLDPADYLLIPVHPWQWWNKLSVTFAAEVARQNLVCLGESDDEYLAQQSIRTFFNATHPEKHYVKTALSVLNMGFMRGLSAAYMEATPAINDWLDRLIDNDPVLKSTGLSIIRERAAVGYRHLEYEAATDRYSPYRKMLAALWRESPVPALRDGESLTTMAALVHVDHEGRSVAGELIARSGLAPTAWLRHYLRAYYTPLLHSFYAYDLAFMPHGENTILVLKDGVVQRAVYKDIAEEIVVMDPDAVLPPEVRRVRAEVPEDMKLLSIFTDVFDCFFRFLAAGLATEEVLAEDDFWRTVAEVTREYQEAHPELDDRFRQYDLFAPEFALSCLNRLQLRDNRQMVDLADPSAALQLVGTLRNPLAGL
-idea_protein	dna_sequence	VARCHAR	descriptor							0	6	100.0	high	Coding DNA sequence.	
-idea_protein	structure_url	VARCHAR	structured identifier						structure_url	1	5	83.3	high	Link to a predicted or experimental 3-D structure.	https://www.rcsb.org/structure/7TGM
-idea_protein	source_organism	VARCHAR	descriptor							5	0	0.0	high	Organism the protein comes from.	Bacillus anthracis; Streptomyces griseoflavus; Pantoea agglomerans CU0119; Dickeya aquatica; Streptomyces thioluteus DSM 40027
-idea_protein	source_type	VARCHAR	descriptor							4	0	0.0	high	Provenance of the sequence (natural / designed / …).	Type A NIS synthetase; Type C NIS synthetase; amide synthetase; NIS synthetase
-idea_protein	notes	VARCHAR	descriptor							6	0	0.0	medium		identity: petrobactin biosynthesis protein AsbB; source UniProt Q81RQ8 (HIGH (organism + name match paper)); identity: petrobactin biosynthesis; citrate+spermidine ligase; source UniProt A0A0F7RJ52 (HIGH (organism + name match paper)); identity: desferrioxamine synthetase; amide/oligoamide ligation; source PDB 7TGK (HIGH (paper-cited PDB)); identity: standalone AMP-ligase for (R)-3-isocyanobutanoic acid; source GenBank ATY72527.1 (HIGH (GenBank ATY72527.1; native sequence, plasmid His-tag excluded)); identity: fumarate-(S)-2,3-diaminopropanoate ligase (dapdiamide biosynthesis); source UniProt E2JA32 (HIGH (user-confirmed accession E2JA32; GenBank ADN39487.1)); identity: achromobactin biosynthesis synthetase; source UniProt A0A375A990 (MEDIUM (name match; organism unconfirmed))
-idea_protein	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	6	100.0	high	Row creation timestamp (provenance).	
-idea_protein	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	6	100.0	high	Row last-updated timestamp (provenance).	
-idea_protein	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
-idea_reactant	id	VARCHAR	identifier (primary key)	yes						54	0	0.0	high	Reactant (chemical) identifier.	RCT:5_aminovalerate; RCT:Triad_synthesis_product_Glutaric_acid_and_MG_m_z_345_203; RCT:Triad_synthesis_product_Succinic_acid_and_MA_m_z_345_203; RCT:Succinic_acid; RCT:Tetrad_synthesis_product_Succinic_acid_and_MSM_m_z_415_292; RCT:Diad_synthesis_product_Adipic_acid_and_Hexamethylenediamine_
-idea_reactant	name	VARCHAR	descriptor							54	0	0.0	high	Chemical name.	azelaic acid; Tetrad synthesis product [Succinic acid and MSM] m/z 415.292; Tetrad synthesis product [Glutaric acid and MSM] m/z 429.308; Tetrad synthesis product [Glutaric acid and MAM] m/z 457.339; Diad synthesis product [6-aminocaproate and Hexamethylenediamine] m/z 230.223; Diad synthesis product [5-aminovalerate and 5-aminovalerate] m/z 217.155
-idea_reactant	aliases	VARCHAR	descriptor							12	42	77.8	high	Alternative names / synonyms.	Succinic acid; Succinate acid; S; C8-amino acid; Cadaverine; C; 6-aminocaproate; H; Adipic acid; adipate; A; C7-amino acid; P
-idea_reactant	smiles	VARCHAR	structured identifier						smiles	0	54	100.0	high	SMILES structure notation.	
-idea_reactant	inchi	VARCHAR	structured identifier						inchi	0	54	100.0	high	IUPAC InChI structure notation.	
-idea_reactant	inchi_key	VARCHAR	structured identifier						inchi_key	12	42	77.8	high	Hashed InChIKey (structure lookup key).	XDOLZJYETYVRKV-UHFFFAOYSA-N; NAQMVNRVTILPCV-UHFFFAOYSA-N; ISKQADXMHQSTHK-UHFFFAOYSA-N; BDJRBEYXGGNYIS-UHFFFAOYSA-N; VHRGRCVQAFMJIZ-UHFFFAOYSA-N; KDYFGRWQOYBRFD-UHFFFAOYSA-N
-idea_reactant	molecular_formula	VARCHAR	structured identifier						molecular_formula	12	42	77.8	high	Molecular formula (Hill system).	C5H14N2; C6H10O4; C7H15NO2; C9H16O4; C4H6O4; C5H11NO2
-idea_reactant	molecular_weight	DOUBLE	descriptor							37	11	20.4	high	Molecular weight (g/mol).	265.155; 136.19; 258.255; 131.17; 415.292; 102.18
-idea_reactant	notes	VARCHAR	descriptor							24	0	0.0	medium		oligomer: amino-acid tetrad = M–A–X–A; monomer (omega-amino, letter 'H'); PubChem CID 564; monomer (omega-amino); PubChem CID 66085; oligomer: amino-acid diad = hexamethylenediamine(M)–adipic acid(A); the 'PA66 monomer'; oligomer: diacid triad = A–M–A; monomer (diamine); PubChem CID 24250
-idea_reactant	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	54	100.0	high	Row creation timestamp (provenance).	
-idea_reactant	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	54	100.0	high	Row last-updated timestamp (provenance).	
-idea_reactant	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
-idea_reaction	id	VARCHAR	identifier (primary key)	yes						32	0	0.0	high	Reaction identifier.	RXN:4; RXN:31; RXN:3; RXN:24; RXN:2; RXN:28
-idea_reaction	name	VARCHAR	descriptor							32	0	0.0	high	Reaction name.	Diad synthesis: Glutaric acid and Hexamethylenediamine; Tetrad synthesis: Adipic acid and MSM; Diad synthesis: Adipic acid and Hexamethylenediamine; Diad synthesis: C8-amino acid and C8-amino acid; Tetrad synthesis: Succinic acid and MAM; Tetrad synthesis: PA6,6
-idea_reaction	equation	VARCHAR	descriptor							32	0	0.0	high	Human-readable reaction equation.	C8-amino acid and C8-amino acid; C9-diacid and Hexamethylenediamine; C8-amino acid and C8-diamine; Adipic acid and MAM; Adipic acid and p-Xylylenediamine; Succinic acid and MA
-idea_reaction	smarts	VARCHAR	structured identifier						smarts	0	32	100.0	high	SMARTS reaction pattern (machine-readable).	
-idea_reaction	reaction_type	VARCHAR	descriptor							4	0	0.0	high	Classification of the reaction.	MAXA synthesis; Diad synthesis; Triad synthesis; Tetrad synthesis
-idea_reaction	notes	VARCHAR	descriptor							0	32	100.0	medium		
-idea_reaction	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	32	100.0	high	Row creation timestamp (provenance).	
-idea_reaction	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	32	100.0	high	Row last-updated timestamp (provenance).	
-idea_reaction	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-idea_sample	id	VARCHAR	identifier (primary key)	yes						450	0	0.0	high	Sample identifier (CURIE, e.g. SMP:1).	SMP:176; SMP:182; SMP:184; SMP:66; SMP:89; SMP:93
-idea_sample	name	VARCHAR	descriptor							440	0	0.0	high	Human-readable sample / well name.	AsbB|C9-diacid and Hexamethylenediamine|rep3; SfaB|C9-diacid and Hexamethylenediamine|rep1; AcsA|Adipic acid and p-Xylylenediamine|rep2; AsbA|Adipic acid and p-Xylylenediamine|rep2; AsbA|6-aminocaproate and Hexamethylenediamine|rep2; DesD|5-aminovalerate and Hexamethylenediamine|rep1
-idea_sample	experiment_id	VARCHAR	identifier (foreign key)		yes	idea_experiment	id			1	0	0.0	high	The experiment this sample belongs to.	EXP:tetrad-synthesis
-idea_sample	strain_id	BIGINT	descriptor							0	450	100.0	high	The strain the sample was grown from.	
-idea_sample	replicate	BIGINT	descriptor							3	6	1.3	high	Replicate number within the experiment.	1; 3; 2
-idea_sample	sample_type	VARCHAR	descriptor							1	0	0.0	high	Sample category (e.g. lysate, purified, control).	in vitro synthesis assay
-idea_sample	parent_sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			0	450	100.0	high	Parent sample this was derived from (self-reference).	
-idea_sample	storage_location	VARCHAR	descriptor							0	450	100.0	high	Where the physical sample is stored.	
-idea_sample	notes	VARCHAR	descriptor							0	450	100.0	medium		
-idea_sample	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row creation timestamp (provenance).	
-idea_sample	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row last-updated timestamp (provenance).	
-idea_sample	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-idea_stoichiometry	id	BIGINT	identifier (primary key)	yes						94	0	0.0	high	Stoichiometry row identifier.	78; 1; 11; 16; 26; 91
-idea_stoichiometry	idea_reaction_id	VARCHAR	identifier (foreign key)		yes	idea_reaction	id			32	0	0.0	high	The reaction this membership belongs to.	RXN:23; RXN:3; RXN:27; RXN:9; RXN:2; RXN:28
-idea_stoichiometry	idea_reactant_id	VARCHAR	identifier (foreign key)		yes	idea_reactant	id			54	0	0.0	high	The reactant taking part.	RCT:MSM; RCT:PA6_6; RCT:XAMA; RCT:Tetrad_synthesis_product_Succinic_acid_and_MSM_m_z_415_292; RCT:Triad_synthesis_product_MA_and_Cadaverine_m_z_329_292; RCT:Diad_synthesis_product_Adipic_acid_and_Hexamethylenediamine_
-idea_stoichiometry	coefficient	DOUBLE	measured value							2	0	0.0	high	Stoichiometric coefficient.	1.0; -1.0
-idea_stoichiometry	role	VARCHAR	descriptor							2	0	0.0	high	Role of the reactant (substrate / product / cofactor).	product; substrate
-idea_stoichiometry	notes	VARCHAR	descriptor							0	94	100.0	medium		
-idea_stoichiometry	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	94	100.0	high	Row creation timestamp (provenance).	
-idea_stoichiometry	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	94	100.0	high	Row last-updated timestamp (provenance).	
-idea_stoichiometry	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-sample_parameter	id	BIGINT	identifier (primary key)	yes						492	0	0.0	high	Measured-value row identifier.	114; 115; 135; 143; 154; 160
-sample_parameter	sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			450	0	0.0	high	Sample the value was measured on.	SMP:13; SMP:30; SMP:32; SMP:238; SMP:115; SMP:119
-sample_parameter	idea_reactant_id	VARCHAR	identifier (foreign key)		yes	idea_reactant	id			35	0	0.0	high	Reactant the value is scoped to (e.g. which analyte).	RCT:MAXA; RCT:Diad_synthesis_product_C8_amino_acid_and_C8_diamine_m_z_286_; RCT:Triad_synthesis_product_MA_and_6_aminocaproate_m_z_358_271; RCT:Tetrad_synthesis_product_Succinic_acid_and_MAM_m_z_443_323; RCT:Diad_synthesis_product_C7_amino_acid_and_C7_amino_acid_m_z_2; RCT:Diad_synthesis_product_6_aminocaproate_and_C8_diamine_m_z_25
-sample_parameter	idea_reaction_id	VARCHAR	identifier (foreign key)		yes	idea_reaction	id			32	0	0.0	high	Reaction the value is scoped to.	RXN:24; RXN:18; RXN:21; RXN:6; RXN:9; RXN:19
-sample_parameter	label	VARCHAR	measured value							3	0	0.0	high	What was measured — the attribute name (e.g. titer, conversion, mass-spec intensity).	titer; mass-spec intensity; conversion
-sample_parameter	value	VARCHAR	measured value							246	0	0.0	high	The measured value (stored as text; value_type gives its type).	57161.6861141917; 807511.247145502; 2185706.0840541865; 46915.1367377689; 78677.86534908866; 46365.9039876924
-sample_parameter	value_type	VARCHAR	measured value							1	0	0.0	high	Declared type of the value (e.g. real).	real
-sample_parameter	unit	VARCHAR	measured value							3	0	0.0	high	Unit of the measured value.	mg/L; %; intensity (a.u.)
-sample_parameter	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	492	100.0	high	Row creation timestamp (provenance).	
-sample_parameter	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	492	100.0	high	Row last-updated timestamp (provenance).	
-sample_parameter	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-sample_protein	id	BIGINT	identifier (primary key)	yes						354	0	0.0	high	Junction row identifier.	54; 62; 64; 35; 37; 237
-sample_protein	sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			354	0	0.0	high	The sample.	SMP:406; SMP:407; SMP:411; SMP:424; SMP:13; SMP:30
-sample_protein	idea_protein_id	VARCHAR	identifier (foreign key)		yes	idea_protein	id			6	0	0.0	high	The protein present in the sample.	PROT:SfaB; PROT:DdaG; PROT:DesD; PROT:AsbA; PROT:AcsA; PROT:AsbB
-sample_protein	idea_mutant_id	VARCHAR	descriptor							0	354	100.0	high	The engineered variant present, if any (no mutant table in this release).	
-sample_protein	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	354	100.0	high	Row creation timestamp (provenance).	
-sample_protein	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	354	100.0	high	Row last-updated timestamp (provenance).	
-sample_protein	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-sample_reactant	id	BIGINT	identifier (primary key)	yes						846	0	0.0	high	Junction row identifier.	513; 550; 561; 594; 213; 225
-sample_reactant	sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			450	0	0.0	high	The sample.	SMP:12; SMP:15; SMP:22; SMP:37; SMP:42; SMP:267
-sample_reactant	idea_reactant_id	VARCHAR	identifier (foreign key)		yes	idea_reactant	id			19	0	0.0	high	The reactant added.	RCT:C9_diacid; RCT:MSM; RCT:PA6_6; RCT:C8_amino_acid; RCT:Cadaverine; RCT:C8_diamine
-sample_reactant	concentration	DOUBLE	measured value							0	846	100.0	high	Concentration of the reactant in the sample.	
-sample_reactant	concentration_unit	VARCHAR	measured value							0	846	100.0	high	Unit of the concentration.	
-sample_reactant	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	846	100.0	high	Row creation timestamp (provenance).	
-sample_reactant	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	846	100.0	high	Row last-updated timestamp (provenance).	
-sample_reactant	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
-sample_reaction	id	BIGINT	identifier (primary key)	yes						450	0	0.0	high	Junction row identifier.	393; 55; 67; 83; 91; 155
-sample_reaction	sample_id	VARCHAR	identifier (foreign key)		yes	idea_sample	id			450	0	0.0	high	The sample.	SMP:410; SMP:422; SMP:429; SMP:430; SMP:436; SMP:215
-sample_reaction	idea_reaction_id	VARCHAR	identifier (foreign key)		yes	idea_reaction	id			32	0	0.0	high	The reaction the sample runs.	RXN:2; RXN:28; RXN:5; RXN:20; RXN:10; RXN:29
-sample_reaction	is_primary	BOOLEAN	descriptor							1	0	0.0	high	Whether this is the sample's primary reaction.	True
-sample_reaction	created_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row creation timestamp (provenance).	
-sample_reaction	updated_at	TIMESTAMP WITH TIME ZONE	provenance							0	450	100.0	high	Row last-updated timestamp (provenance).	
-sample_reaction	created_by	VARCHAR	provenance							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+table_name	field_name	data_type	role	release	is_primary_key	is_foreign_key	foreign_table	foreign_field	unit	ontology	unique_count	missing_count	missing_percent	interpretation_confidence	description	example_values
+ai_design	id	VARCHAR	identifier (primary key)	earlier	yes						5	0	0.0	high	AI-design proposal identifier.	IDEA_AI_00002; IDEA_AI_00001; IDEA_AI_00004; IDEA_AI_00005; IDEA_AI_00003
+ai_design	idea_protein_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_protein	id			1	0	0.0	high	Parent protein being redesigned.	IDEA_PROT_00001
+ai_design	design_method	VARCHAR	descriptor	earlier							3	0	0.0	high	Design strategy (generative_model, bayesian_optimization, evolutionary_algorithm).	generative_model; bayesian_optimization; evolutionary_algorithm
+ai_design	model_name	VARCHAR	descriptor	earlier							3	0	0.0	high	Model(s) used (e.g. ESM+NSGA-III, ProteinMPNN).	Bayesian+ESM; ESM+NSGA-III; ProteinMPNN
+ai_design	proposed_mutations	VARCHAR	descriptor	earlier							5	0	0.0	high	Mutations proposed by the design.	A216T;R247N; V213N;A216T; A216T;I210V; A216T;A215I;R247N; G211T;A216T;A219N
+ai_design	proposed_sequence	VARCHAR	descriptor	earlier							1	0	0.0	high	Full proposed sequence, if given.	
+ai_design	optimization_target	VARCHAR	descriptor	earlier							3	0	0.0	high	Objective(s) optimized (activity, stability, selectivity).	activity; activity;stability; activity;selectivity
+ai_design	optimization_algorithm	VARCHAR	descriptor	earlier							3	0	0.0	high	Multi-objective algorithm used (NSGA-II/III, Bayesian).	NSGA-II; Bayesian; NSGA-III
+ai_design	generation	VARCHAR	descriptor	earlier							4	0	0.0	high	Design-campaign generation / round.	1; 5; 2; 3
+ai_design	objective_scores	VARCHAR	descriptor	earlier							5	0	0.0	high	Predicted objective scores (JSON).	"{""predicted_activity"": 1.8, ""predicted_stability"": 1.2}; {""predicted_activity"": 1.6, ""predicted_selectivity"": 2.3}; {""predicted_activity"": 2.1, ""predicted_stability"": 0.9}; {""predicted_activity"": 1.3, ""expected_improvement"": 0.4}; {""predicted_activity"": 1.5, ""predicted_stability"": 1.4}"
+ai_design	pareto_rank	VARCHAR	descriptor	earlier							3	0	0.0	high	Rank on the Pareto front.	1; 2; 3
+ai_design	pareto_optimal	VARCHAR	descriptor	earlier							2	0	0.0	high	Whether the candidate is Pareto-optimal (0/1).	0; 1
+ai_design	selected_for_testing	VARCHAR	descriptor	earlier							2	0	0.0	high	Whether the candidate was chosen for wet-lab testing (0/1).	1; 0
+ai_design	design_rationale	VARCHAR	descriptor	earlier							5	0	0.0	high	Human rationale for the proposal.	Double mutant combining two best single-site hits; Bayesian round exploring V213 position; Triple mutant from gen 2, high activity but lower stability; Alternative combo with I210V for stability; Optimized for selectivity toward N66 L1 over L2
+ai_design	run_date	VARCHAR	descriptor	earlier							4	0	0.0	high	Date the design was produced.	2026-02-05; 2026-02-12; 2026-02-10; 2026-02-01
+ai_design	notes	VARCHAR	descriptor	earlier							5	0	0.0	high	Free-text note.	Selected for testing pending stability check; Pareto-optimal for stability; ; Top candidate from round 1 MPNN design; Below Pareto front but explores new region
+computation	id	VARCHAR	identifier (primary key)	earlier	yes						5	0	0.0	high	Computation-job identifier.	5; 2; 3; 4; 1
+computation	idea_protein_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_protein	id			1	0	0.0	high	Protein the job ran on.	IDEA_PROT_00001
+computation	idea_mutant_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_mutant	id			4	0	0.0	high	Variant the job ran on, if any.	; IDEA_MUT_00013; IDEA_MUT_00016; IDEA_MUT_00015
+computation	idea_reaction_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_reaction	id			2	0	0.0	high	Reaction context, if any.	; IDEA_RXN_00001
+computation	procedure_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_procedure	id			3	0	0.0	high	Procedure this computation followed.	6; 3; 4
+computation	type	VARCHAR	descriptor	earlier							3	0	0.0	high	Job type (structure_prediction, ml_model, MD).	MD; structure_prediction; ml_model
+computation	model_name	VARCHAR	descriptor	earlier							3	0	0.0	high	Software / model used (AlphaFold2, ESM-1v, OpenMM).	AlphaFold2; ESM-1v; OpenMM
+computation	compute_platform	VARCHAR	descriptor	earlier							2	0	0.0	high	Where it ran (local, Aurora).	local; Aurora
+computation	simulation_params	VARCHAR	descriptor	earlier							3	0	0.0	high	Job parameters (JSON).	"{""model"": ""esm1v_t33_650M"", ""scoring"": ""masked_marginal""}; {""num_models"": 5, ""num_recycles"": 3}; {""forcefield"": ""AMBER ff14SB"", ""duration_ns"": 100, ""ensemble"": ""NPT"", ""temperature_K"": 303}"
+computation	run_date	VARCHAR	descriptor	earlier							3	0	0.0	high	Date the job ran.	2026-01-12; 2026-01-10; 2026-01-25
+computation	filename	VARCHAR	descriptor	earlier							3	0	0.0	high	Output file produced.	AS9_alphafold2.pdb; AS9_md_100ns.dcd; 
+computation	notes	VARCHAR	descriptor	earlier							5	0	0.0	high	Free-text note.	Zero-shot log-likelihood ratio for R247N; pLDDT mean=87.3, high confidence active site; Zero-shot log-likelihood ratio for I210V; Zero-shot log-likelihood ratio for A216T; RMSD stable after 20ns equilibration
+idea_dbxref	id	BIGINT	identifier (primary key)	both	yes						18	0	0.0	high	Cross-reference row identifier.	15; 9; 14; 17; 5; 10
+idea_dbxref	entity_type	VARCHAR	descriptor	both							2	0	0.0	high	Which kind of entity this cross-reference is for (protein, reactant, …).	reactant; protein
+idea_dbxref	entity_id	VARCHAR	descriptor	both							18	0	0.0	high	The IDEAS entity id being cross-referenced.	RCT:C8_diamine; PROT:AsbA; RCT:Adipic_acid; RCT:C9_diacid; RCT:p_Xylylenediamine; RCT:C7_amino_acid
+idea_dbxref	database_name	VARCHAR	descriptor	both							4	0	0.0	high	External database name (UniProt, PDB, PubChem, …).	GenBank; PubChem; UniProt; PDB
+idea_dbxref	accession	VARCHAR	descriptor	both							18	0	0.0	high	The accession / identifier in that external database.	1110; E2JA32; 24250; ATY72527.1; 13580; A0A375A990
+idea_dbxref	url	VARCHAR	descriptor	both							18	0	0.0	high	Resolvable URL for the external record.	https://pubchem.ncbi.nlm.nih.gov/compound/16402; https://www.rcsb.org/structure/7TGK; https://pubchem.ncbi.nlm.nih.gov/compound/66085; https://www.uniprot.org/uniprotkb/A0A0F7RJ52; https://pubchem.ncbi.nlm.nih.gov/compound/13580; https://www.uniprot.org/uniprotkb/ATY72527.1
+idea_dbxref	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	18	100.0	high	Row creation timestamp (provenance).	
+idea_dbxref	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	18	100.0	high	Row last-updated timestamp (provenance).	
+idea_dbxref	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
+idea_experiment	id	VARCHAR	identifier (primary key)	both	yes						1	0	0.0	high	Experiment identifier (CURIE, e.g. EXP:tetrad-synthesis).	EXP:tetrad-synthesis
+idea_experiment	start_date	DATE	descriptor	both							0	1	100.0	high	Date the experiment began.	
+idea_experiment	type	VARCHAR	descriptor	both							0	1	100.0	high	Kind of experiment / campaign.	
+idea_experiment	index_num	BIGINT	descriptor	both							0	1	100.0	high	Ordinal index of the experiment.	
+idea_experiment	description	VARCHAR	descriptor	both							1	0	0.0	high	Free-text description of the experiment.	Tetrad-paper in vitro synthesis panels
+idea_experiment	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	1	100.0	high	Row creation timestamp (provenance).	
+idea_experiment	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	1	100.0	high	Row last-updated timestamp (provenance).	
+idea_experiment	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+idea_experiment	procedure_id	VARCHAR	descriptor	earlier							1	0	0.0	high	Procedure that produced the experiment (removed in tetrad_v1).	1
+idea_lab	id	VARCHAR	identifier (primary key)	earlier	yes						2	0	0.0	high	Lab identifier.	1; 2
+idea_lab	name	VARCHAR	descriptor	earlier							2	0	0.0	high	Laboratory name.	Henry/Ramanathan Lab; Michener Lab
+idea_lab	location	VARCHAR	descriptor	earlier							2	0	0.0	high	Institution / site (ANL, ORNL).	ORNL; ANL
+idea_measurement	id	BIGINT	identifier (primary key)	both	yes						450	0	0.0	high	Measurement-event identifier.	251; 277; 289; 296; 42; 413
+idea_measurement	sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			450	0	0.0	high	Sample this measurement was taken on.	SMP:371; SMP:381; SMP:392; SMP:397; SMP:306; SMP:319
+idea_measurement	type	VARCHAR	descriptor	both							2	0	0.0	high	Assay / instrument type (e.g. mass-spec, LC-MS quantitation).	LC-MS quantitation; mass-spec
+idea_measurement	filename	VARCHAR	descriptor	both							0	450	100.0	high	Source raw/processed data file for this measurement.	
+idea_measurement	notes	VARCHAR	descriptor	both							0	450	100.0	medium		
+idea_measurement	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row creation timestamp (provenance).	
+idea_measurement	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row last-updated timestamp (provenance).	
+idea_measurement	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+idea_measurement	procedure_id	VARCHAR	descriptor	earlier							1	0	0.0	high	Procedure the measurement followed (removed in tetrad_v1).	2
+idea_mutant	id	VARCHAR	identifier (primary key)	earlier	yes						21	0	0.0	high	Variant identifier.	IDEA_MUT_00001; IDEA_MUT_00003; IDEA_MUT_00010; IDEA_MUT_00014; IDEA_MUT_00019; IDEA_MUT_00002
+idea_mutant	idea_protein_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_protein	id			1	0	0.0	high	Parent protein this variant derives from.	IDEA_PROT_00001
+idea_mutant	mutations	VARCHAR	descriptor	earlier							21	0	0.0	high	Mutation list applied (e.g. V213K).	V213K; A219N; I210D; I210K; G211E; R247N
+idea_mutant	aa_sequence	VARCHAR	descriptor	earlier							1	0	0.0	high	Variant amino-acid sequence (if recorded).	
+idea_mutant	dna_sequence	VARCHAR	descriptor	earlier							1	0	0.0	high	Variant coding DNA sequence (if recorded).	
+idea_mutant	design_method	VARCHAR	descriptor	earlier							1	0	0.0	high	How the variant was designed (e.g. directed_evolution).	directed_evolution
+idea_mutant	ai_design_id	VARCHAR	identifier (foreign key)	earlier		yes	ai_design	id			1	0	0.0	high	The AI design proposal this variant realizes, if any.	
+idea_mutant	notes	VARCHAR	descriptor	earlier							1	0	0.0	high	Free-text note.	
+idea_people	id	VARCHAR	identifier (primary key)	earlier	yes						6	0	0.0	high	Person identifier.	5; 1; 3; 4; 6; 2
+idea_people	first_name	VARCHAR	descriptor	earlier							6	0	0.0	high	Given name.	Josh; Liang; Serena; Chris; Jose; Arvind
+idea_people	last_name	VARCHAR	descriptor	earlier							6	0	0.0	high	Family name.	Faria; Lotreck; Ramanathan; Michener; Henry; Yu
+idea_people	email	VARCHAR	descriptor	earlier							6	0	0.0	high	Contact email.	; chenry@anl.gov; ramanathana@anl.gov; yul1@ornl.gov; michenerj@ornl.gov; jpfaria@anl.gov
+idea_people	lab_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_lab	id			2	0	0.0	high	Lab the person belongs to.	2; 1
+idea_procedure	id	VARCHAR	identifier (primary key)	earlier	yes						6	0	0.0	high	Procedure identifier.	5; 2; 1; 3; 4; 6
+idea_procedure	protocol_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_protocol	id			6	0	0.0	high	Protocol this procedure instantiates.	5; 2; 1; 6; 3; 4
+idea_procedure	lab_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_lab	id			2	0	0.0	high	Lab that executed it.	1; 2
+idea_procedure	contact_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_people	id			2	0	0.0	high	Person responsible.	1; 3
+idea_procedure	timestamp	VARCHAR	descriptor	earlier							5	0	0.0	high	When the procedure was carried out.	2026-01-20; 2026-01-15; 2026-01-10; 2026-01-25; 2026-01-12
+idea_protein	id	VARCHAR	identifier (primary key)	both	yes						6	0	0.0	high	Protein identifier.	PROT:DdaG; PROT:DesD; PROT:AsbA; PROT:AsbB; PROT:AcsA; PROT:SfaB
+idea_protein	name	VARCHAR	descriptor	both							6	0	0.0	high	Protein / enzyme name.	AsbB; SfaB; DdaG; AcsA; DesD; AsbA
+idea_protein	aa_sequence	VARCHAR	descriptor	both							6	0	0.0	high	Amino-acid sequence (one-letter).	MAEFNEMKTTGDKLYHPELRTLVETARFHAERQPETPAILFEGGTTTYGQLHEESNRIAHAIRAAGAAPGTRVAYLGKESAHYYEILFGCAKSGTVLVPINWRLTAHEVSHILQDSGTELLFLEEEFAPILDRLPDGPPATVVRLGVPEGFAAWKAAHPATEPDVDAGPDTPFAQIYTSGTTGLPKGVVLAHRSCFAIRDALASEGLEWIDWRAGDVALVGIPGFHVGGLWWATQNFNAGVTVVVMRAFAAHAAVELIRDLGVTTACVVPAMLRLMLAEPGITPEHFTTLRKIVYGGSPISEALLEESLAMFGSEFAQIYGLTETGNTACCLPPSAHVPGSPRMKAAGHPYPGIRAKVIDAEGRELPTGSVGEVCLHTPARMVEYWGLPDKTAETLVDGWIHTGDAGYVDEDGYVFISDRIKDAVIVAGENVYPAEIENVLEGHPGVADAVVVGAPDERWGETVHAFVVPAPGHEPTPRDLHRFLVDRLASFKLPAAYEFIDEVPRNPSGKILRRELRERFWSGSDRKVN; MRMDMYHTKILKAIESEDYISVRRRVLRQLVESLIYEGIITPARIEKEEQILFLIQGLDEDNKSVTYECYGRERITFGRISIDSLIVRVQDGKQEIQSVAQFLEEVFRVVNVEQTKLDSFIHELEQTIFKDTIAQYERCNKLKYTQKSYDELENHLIDGHPYHPSYKARIGFQYRDNFRYGYEFMRPIKLIWIAAHKKNATVGYENEVIYDKILKSEVGERKLEAYKERIHSMGCDPKQYLFIPVHPWQWENFIISNYAEDIQDKGIIYLGESADDYCAQQSMRTLRNVTNPKRPYVKVSLNILNTSTLRTLKPYSVASAPAISNWLSNVVSQDSYLRDESRVILLKEFSSVMYDTNKKATYGSLGCIWRESVHHYLGEQEDAVPFNGLYAKEKDGTPIIDAWLNKYGIENWLRLLIQKAIIPVIHLVVEHGIALESHGQNMILVHKEGLPVRIALKDFHEGLEFYRPFLKEMNKCPDFTKMHKTYANGKMNDFFEMDRIECLQEMVLDALFLFNVGELAFVLADKYEWKEESFWMIVVEEIENHFRKYPHLKDRFESIQLYTPTFYAEQLTKRRLYIDVESLVHEVPNPLYRARQLNIQKSVATGGNYANC; MNKGENMNLEMWVQNISATFPWYAQLLRDKQADLSRLESLPLITEELLTQHYYHAENSFPGEHHSYLTSGTTSGKRKRIFYSDNDQRIYLQQRMDIIRDFCGEGHTRACADLGTGHAAATAGEIFQAMGCDVELIDFTRPIEQHIEVLNRFKPDIFFTMPMILDSLIATGKLDFQPKRIILLGDVASLNWQNKVADYFHIQPAQVLDLFGSIEIGSIAFYNHAQKRYQFDSYVRPEVVPVQSLYPGAKYGGDGGILLLTSFAREYFPAVRFVTNDLIEGFAQENVGGRTVYTYQRCLGRFAGEFKHGEKINLSDISDALANNLPYHKYDLADHEGGLVIRIAAKSIPTEVIEAIKHDLLARNPDIAQMISSGLVGDIRIQCVDAQEITGNVSKRRY; MGSSHHHHHHSSGLVPRGSHMSLTDAVAHLSPERWEEANRLLVRKALAEFAHERLFTPEPADGQDGRYVVRSDDGLTSYRFTAVRRALDHWQVDAGSITRTRDGAELPLAALDFFIELRHTLGLSDEILPVYLEEISSTLSGTCYKLTKPQVTAAGLLEGGFQALESGMTEGHPCFVANNGRLGFGVDEYLAYAPETAHPVRLVWLAAHRSRAAFTAGAGIDYASFVRQELGEETVERFDGVLRGRGLDPADYLLIPVHPWQWWNKLSVTFAAEVARQNLVCLGESDDEYLAQQSIRTFFNATHPEKHYVKTALSVLNMGFMRGLSAAYMEATPAINDWLDRLIDNDPVLKSTGLSIIRERAAVGYRHLEYEAATDRYSPYRKMLAALWRESPVPALRDGESLTTMAALVHVDHEGRSVAGELIARSGLAPTAWLRHYLRAYYTPLLHSFYAYDLAFMPHGENTILVLKDGVVQRAVYKDIAEEIVVMDPDAVLPPEVRRVRAEVPEDMKLLSIFTDVFDCFFRFLAAGLATEEVLAEDDFWRTVAEVTREYQEAHPELDDRFRQYDLFAPEFALSCLNRLQLRDNRQMVDLADPSAALQLVGTLRNPLAGL; MKHAKQIAEHATIQSFLNCYLRETGSGEWITEDKRIEDIFYHLFQRDTCSTYLCCRLSAQNITLYGEVIYKSPTDRHLFGEQFYYQMGDSNSVMKADYVTVITFLIKEMSINYGEGTNPAELMLRVIRSCQNIEEFTKERKEDTSALYGFHTSFIEAEQSLLFGHLTHPTPKSRQGILEWKSAMYSPELKGECQLHYFRAHKSIVNEKSLLLDSTTVILKEELRNDEMVSKEFISKYCNEDEYSLLPIHPLQAEWLLHQPYVQDWIEQGVLEYIGPTGKCYMATSSLRTLYHPDAKYMLKFSFPVKVTNSMRINKLKELESGLEGKAMLNTAIGEVLEKFPGFDFICDPAFITLNYGTQESGFEVIIRENPFYSEHADDATLIAGLVQDAIPGERTRLSNIIHRLADLESRSCEEVSLEWFRRYMNISLKPMVWMYLQYGVALEAHQQNSVVQLKDGYPVKYYFRDNQGFYFCNSMKEMLNNELAGIGERTGNLYDDYIVDERFRYYLIFNHMFGLINGFGTAGLIREEILLTELRTVLESFLPYNREPSTFLRELLEEDKLACKANLLTRFFDVDELSNPLEQAIYVQVQNPLVREVAVRS; MENQAINIPPYSHSHYQLACASVMQDLVDCLLAEHFFGPQPLALYRGDEWLAHYGCTTPFGEPAGDARLWRWCCDEREQCHLVLLLRPGITQRWEKVPQTAVYLWQQGGNDWQALEPESFMNRVFAAQQGGQENAKGQALFLDVLTTSVWQTALSQAHRIDTDALMTRTNADFFQVMEQWASLRDRPYHPTAKAKQGLDVQEYCRYVAEFAAPVALNWVAVAKARLQCGDGISDAASQYPARYLLPPAEQAALQQELVARGIADTHIALPVHPWQFDHILEPQLGEVFRHGDCHRLDFSAARYLPTSSLRSMTPCFASADYLKLPMAVYSLGASRYLPAVKMINGGLSERLLRQARAKDALLEQRLYMCDESKWWAFMPPQATLFDEAPRHLSAMVRTYPAELFDNPDYRLLPMAALGTPLPVSRRHFFDDWLAYRGLSADAHGVETLFAELCRCFFDINFRLFRLGMLGEIHGQNAVLVWKAGEAHGVLLRDHDSLRIHVPTLEQHGMQDPVYRIKQGHANTLYHDRLDDLLFWLQTLGIQVNLRAIIDTLAETYALSAARLWQVMQMEINDAIDRTGFSSDTHAMLKTRLFDVPNWPQKLLITPMIARAGGPGSMPFGKGEVINPFQAIMGKSC
+idea_protein	dna_sequence	VARCHAR	descriptor	both							0	6	100.0	high	Coding DNA sequence.	
+idea_protein	structure_url	VARCHAR	structured identifier	both						structure_url	1	5	83.3	high	Link to a predicted or experimental 3-D structure.	https://www.rcsb.org/structure/7TGM
+idea_protein	source_organism	VARCHAR	descriptor	both							5	0	0.0	high	Organism the protein comes from.	Streptomyces thioluteus DSM 40027; Bacillus anthracis; Streptomyces griseoflavus; Dickeya aquatica; Pantoea agglomerans CU0119
+idea_protein	source_type	VARCHAR	descriptor	both							4	0	0.0	high	Provenance of the sequence (natural / designed / …).	Type A NIS synthetase; Type C NIS synthetase; NIS synthetase; amide synthetase
+idea_protein	notes	VARCHAR	descriptor	both							6	0	0.0	medium		identity: standalone AMP-ligase for (R)-3-isocyanobutanoic acid; source GenBank ATY72527.1 (HIGH (GenBank ATY72527.1; native sequence, plasmid His-tag excluded)); identity: petrobactin biosynthesis; citrate+spermidine ligase; source UniProt A0A0F7RJ52 (HIGH (organism + name match paper)); identity: achromobactin biosynthesis synthetase; source UniProt A0A375A990 (MEDIUM (name match; organism unconfirmed)); identity: fumarate-(S)-2,3-diaminopropanoate ligase (dapdiamide biosynthesis); source UniProt E2JA32 (HIGH (user-confirmed accession E2JA32; GenBank ADN39487.1)); identity: petrobactin biosynthesis protein AsbB; source UniProt Q81RQ8 (HIGH (organism + name match paper)); identity: desferrioxamine synthetase; amide/oligoamide ligation; source PDB 7TGK (HIGH (paper-cited PDB))
+idea_protein	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	6	100.0	high	Row creation timestamp (provenance).	
+idea_protein	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	6	100.0	high	Row last-updated timestamp (provenance).	
+idea_protein	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
+idea_protein	kb_protein_id	VARCHAR	descriptor	earlier							1	0	0.0	high	KBase protein identifier cross-reference (removed in tetrad_v1).	
+idea_protein	kb_genome_id	VARCHAR	descriptor	earlier							1	0	0.0	high	KBase genome identifier cross-reference (removed in tetrad_v1).	
+idea_protocol	id	VARCHAR	identifier (primary key)	earlier	yes						6	0	0.0	high	Protocol identifier.	1; 5; 3; 4; 6; 2
+idea_protocol	description	VARCHAR	descriptor	earlier							6	0	0.0	high	What the protocol does.	LC-MS metabolomics targeted analysis for N66 products; ESM-1v zero-shot mutation effect prediction; ProteinMPNN fixed-backbone sequence design for active site optimization; OpenMM molecular dynamics simulation: 100ns NPT ensemble, AMBER ff14SB; AlphaFold2 structure prediction followed by Rosetta relaxation; Lysate assay: 50 uL reaction containing 100 mM HEPES (pH 8.0), 20 mM ATP, 20 mM MgCl2, 10 mM adipic acid, 10 mM hexamethylenediamine, 25 uL lysate. Incubated at 30C for 3h with shaking at 200 rpm.
+idea_protocol	filename	VARCHAR	descriptor	earlier							2	0	0.0	high	Attached protocol file, if any.	Reaction conditions of AS9 lysate test for N66.docx; 
+idea_reactant	id	VARCHAR	identifier (primary key)	both	yes						54	0	0.0	high	Reactant (chemical) identifier.	RCT:5_aminovalerate; RCT:Triad_synthesis_product_Succinic_acid_and_MA_m_z_345_203; RCT:Succinic_acid; RCT:Triad_synthesis_product_Glutaric_acid_and_MG_m_z_345_203; RCT:Adipic_acid; RCT:MG
+idea_reactant	name	VARCHAR	descriptor	both							54	0	0.0	high	Chemical name.	azelaic acid; Diad synthesis product [5-aminovalerate and 5-aminovalerate] m/z 217.155; MAMA; Diad synthesis product [6-aminocaproate and Hexamethylenediamine] m/z 230.223; Tetrad synthesis product [PA6,6] m/z 471.355; XAMA
+idea_reactant	aliases	VARCHAR	descriptor	both							12	42	77.8	high	Alternative names / synonyms.	C8-amino acid; Cadaverine; C; 5-aminovalerate; Adipic acid; adipate; A; C9-diacid; Z; Hexamethylenediamine; M
+idea_reactant	smiles	VARCHAR	structured identifier	both						smiles	0	54	100.0	high	SMILES structure notation.	
+idea_reactant	inchi	VARCHAR	structured identifier	both						inchi	0	54	100.0	high	IUPAC InChI structure notation.	
+idea_reactant	inchi_key	VARCHAR	structured identifier	both						inchi_key	12	42	77.8	high	Hashed InChIKey (structure lookup key).	JFCQEDHGNNZCLN-UHFFFAOYSA-N; JJMDCOVWQOJGCB-UHFFFAOYSA-N; UQXNEWQGGVUVQA-UHFFFAOYSA-N; PWGJDPKCLMLPJW-UHFFFAOYSA-N; WNLRTRBMVRJNCN-UHFFFAOYSA-N; XDOLZJYETYVRKV-UHFFFAOYSA-N
+idea_reactant	molecular_formula	VARCHAR	structured identifier	both						molecular_formula	12	42	77.8	high	Molecular formula (Hill system).	C5H14N2; C5H8O4; C6H16N2; C8H12N2; C9H16O4; C4H6O4
+idea_reactant	molecular_weight	DOUBLE	descriptor	both							37	11	20.4	high	Molecular weight (g/mol).	118.09; 471.355; 145.2; 159.23; 132.11; 329.292
+idea_reactant	notes	VARCHAR	descriptor	both							24	0	0.0	medium		monomer (diacid, letter 'G'); PubChem CID 743; monomer (omega-amino, letter 'P'); PubChem CID 13580; monomer (omega-amino); PubChem CID 138; monomer (diacid, letter 'S'); PubChem CID 1110; oligomer: polyamide-6,6 tetrad congener; oligomer: amino-acid tetrad = X–A–M–A
+idea_reactant	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	54	100.0	high	Row creation timestamp (provenance).	
+idea_reactant	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	54	100.0	high	Row last-updated timestamp (provenance).	
+idea_reactant	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v2
+idea_reactant	kb_metabolite_id	VARCHAR	descriptor	earlier							1	0	0.0	high	KBase/ModelSEED metabolite cross-reference (removed in tetrad_v1).	
+idea_reaction	id	VARCHAR	identifier (primary key)	both	yes						32	0	0.0	high	Reaction identifier.	RXN:14; RXN:15; RXN:7; RXN:22; RXN:11; RXN:12
+idea_reaction	name	VARCHAR	descriptor	both							32	0	0.0	high	Reaction name.	Diad synthesis: Adipic acid and p-Xylylenediamine; Triad synthesis: MA and 6-aminocaproate; Triad synthesis: MA and C8-diamine; Triad synthesis: Succinic acid and MG; Diad synthesis: 6-aminocaproate and 6-aminocaproate; Diad synthesis: 5-aminovalerate and Hexamethylenediamine
+idea_reaction	equation	VARCHAR	descriptor	both							32	0	0.0	high	Human-readable reaction equation.	6-aminocaproate and Hexamethylenediamine; MA and XA; Adipic acid and MG; AMA and Hexamethylenediamine; 6-aminocaproate and C8-diamine; MA and 6-aminocaproate
+idea_reaction	smarts	VARCHAR	structured identifier	both						smarts	0	32	100.0	high	SMARTS reaction pattern (machine-readable).	
+idea_reaction	reaction_type	VARCHAR	descriptor	both							4	0	0.0	high	Classification of the reaction.	Diad synthesis; Tetrad synthesis; MAXA synthesis; Triad synthesis
+idea_reaction	notes	VARCHAR	descriptor	both							0	32	100.0	medium		
+idea_reaction	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	32	100.0	high	Row creation timestamp (provenance).	
+idea_reaction	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	32	100.0	high	Row last-updated timestamp (provenance).	
+idea_reaction	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+idea_reaction	kb_reaction_id	VARCHAR	descriptor	earlier							1	0	0.0	high	KBase/ModelSEED reaction cross-reference (removed in tetrad_v1).	
+idea_sample	id	VARCHAR	identifier (primary key)	both	yes						450	0	0.0	high	Sample identifier (CURIE, e.g. SMP:1).	SMP:406; SMP:407; SMP:411; SMP:424; SMP:435; SMP:152
+idea_sample	name	VARCHAR	descriptor	both							440	0	0.0	high	Human-readable sample / well name.	SfaB|Adipic acid and MG|rep3; AsbB|Glutaric acid and MA|rep1; DesD|Glutaric acid and MA|rep1; DesD|5-aminovalerate and Hexamethylenediamine|rep2; DesD|5-aminovalerate and 5-aminovalerate|rep3; control|5-aminovalerate and 5-aminovalerate|rep3
+idea_sample	experiment_id	VARCHAR	identifier (foreign key)	both		yes	idea_experiment	id			1	0	0.0	high	The experiment this sample belongs to.	EXP:tetrad-synthesis
+idea_sample	strain_id	BIGINT	identifier (foreign key)	both		yes	idea_strain	id			0	450	100.0	high	The strain the sample was grown from.	
+idea_sample	replicate	BIGINT	descriptor	both							3	6	1.3	high	Replicate number within the experiment.	3; 2; 1
+idea_sample	sample_type	VARCHAR	descriptor	tetrad_v1							1	0	0.0	high	Sample category (e.g. lysate, purified, control).	in vitro synthesis assay
+idea_sample	parent_sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			0	450	100.0	high	Parent sample this was derived from (self-reference).	
+idea_sample	storage_location	VARCHAR	descriptor	both							0	450	100.0	high	Where the physical sample is stored.	
+idea_sample	notes	VARCHAR	descriptor	both							0	450	100.0	medium		
+idea_sample	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row creation timestamp (provenance).	
+idea_sample	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row last-updated timestamp (provenance).	
+idea_sample	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+idea_sample	procedure_id	VARCHAR	descriptor	earlier							1	0	0.0	high	Procedure that produced the sample (removed in tetrad_v1).	
+idea_stoichiometry	id	BIGINT	identifier (primary key)	both	yes						94	0	0.0	high	Stoichiometry row identifier.	15; 22; 31; 81; 52; 92
+idea_stoichiometry	idea_reaction_id	VARCHAR	identifier (foreign key)	both		yes	idea_reaction	id			32	0	0.0	high	The reaction this membership belongs to.	RXN:28; RXN:2; RXN:6; RXN:9; RXN:11; RXN:12
+idea_stoichiometry	idea_reactant_id	VARCHAR	identifier (foreign key)	both		yes	idea_reactant	id			54	0	0.0	high	The reactant taking part.	RCT:XA; RCT:XAXA; RCT:Diad_synthesis_product_C8_amino_acid_and_C8_amino_acid_m_z_3; RCT:Diad_synthesis_product_6_aminocaproate_and_Hexamethylenediam; RCT:Tetrad_synthesis_product_AMA_and_Hexamethylenediamine_m_z_47; RCT:Diad_synthesis_product_5_aminovalerate_and_5_aminovalerate_m
+idea_stoichiometry	coefficient	DOUBLE	measured value	both							2	0	0.0	high	Stoichiometric coefficient.	-1.0; 1.0
+idea_stoichiometry	role	VARCHAR	descriptor	both							2	0	0.0	high	Role of the reactant (substrate / product / cofactor).	substrate; product
+idea_stoichiometry	notes	VARCHAR	descriptor	both							0	94	100.0	medium		
+idea_stoichiometry	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	94	100.0	high	Row creation timestamp (provenance).	
+idea_stoichiometry	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	94	100.0	high	Row last-updated timestamp (provenance).	
+idea_stoichiometry	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+idea_strain	id	VARCHAR	identifier (primary key)	earlier	yes						2	0	0.0	high	Strain identifier.	1; 2
+idea_strain	long_name	VARCHAR	descriptor	earlier							2	0	0.0	high	Full strain name (e.g. E. coli BL21(DE3)).	E. coli BL21(DE3); E. coli BL21(DE3) pLysS
+idea_strain	short_name	VARCHAR	descriptor	earlier							2	0	0.0	high	Short strain label.	BL21-pLysS; BL21
+idea_strain	parent_strain_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_strain	id			2	0	0.0	high	Parent strain (self-reference).	1.0; 
+protein_parameter	id	VARCHAR	identifier (primary key)	earlier	yes						86	0	0.0	high	Metric row identifier.	34; 41; 72; 5; 7; 9
+protein_parameter	idea_protein_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_protein	id			1	0	0.0	high	Protein the metric is about.	IDEA_PROT_00001
+protein_parameter	idea_mutant_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_mutant	id			22	0	0.0	high	Engineered variant the metric is about, if any.	IDEA_MUT_00002; IDEA_MUT_00005; IDEA_MUT_00006; IDEA_MUT_00016; IDEA_MUT_00020; IDEA_MUT_00013
+protein_parameter	label	VARCHAR	measured value	earlier							6	0	0.0	high	What was computed — the attribute name (esm1v_score, pLDDT, RMSD_equilibrium, …).	N66_L1_abundance; N66_L2_abundance; esm1v_score; pLDDT; foldchange_to_WT; RMSD_equilibrium
+protein_parameter	value	VARCHAR	measured value	earlier							71	0	0.0	high	The computed value (stored as text).	0.41235463994771776; 3.3422419896626123; 10.785437600752177; 0.0043142130950133495; 0.3345436547021363; 0.3164425656055699
+protein_parameter	unit	VARCHAR	measured value	earlier							5	0	0.0	high	Unit / scale of the value (log_likelihood_ratio, score, angstrom, relative_abundance, fold).	relative_abundance; score; log_likelihood_ratio; fold; angstrom
+protein_parameter	error	VARCHAR	measured value	earlier							49	0	0.0	high	Uncertainty / error estimate on the value.	0.04631936686558299; 0.11586733083285171; 0.12551502140154966; 2.4755265722622704; 0.04684995628991666; 0.3090896000636461
+protein_parameter	measurement_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_measurement	id			28	0	0.0	high	Measurement event this metric is linked to, if any.	12.0; 6.0; 10.0; 18.0; 5.0; 9.0
+protein_parameter	computation_id	VARCHAR	identifier (foreign key)	earlier		yes	computation	id			6	0	0.0	high	Computation job that produced this metric, if any.	5.0; ; 2.0; 3.0; 4.0; 1.0
+protein_parameter	idea_reaction_id	VARCHAR	identifier (foreign key)	earlier		yes	idea_reaction	id			3	0	0.0	high	Reaction the metric is scoped to, if any.	IDEA_RXN_00002; ; IDEA_RXN_00001
+protein_parameter	notes	VARCHAR	descriptor	earlier							7	0	0.0	high	Free-text note on the metric.	N66 L1 foldchange relative to WT average (9.99); Average backbone RMSD after equilibration; Favorable mutation per ESM-1v (R247N); Favorable mutation per ESM-1v (A216T); ; AlphaFold2 mean pLDDT
+sample_parameter	id	BIGINT	identifier (primary key)	both	yes						492	0	0.0	high	Measured-value row identifier.	55; 67; 83; 91; 11; 16
+sample_parameter	sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			450	0	0.0	high	Sample the value was measured on.	SMP:392; SMP:397; SMP:406; SMP:407; SMP:411; SMP:424
+sample_parameter	idea_reactant_id	VARCHAR	identifier (foreign key)	tetrad_v1		yes	idea_reactant	id			35	0	0.0	high	Reactant the value is scoped to (e.g. which analyte).	RCT:XAMA; RCT:Triad_synthesis_product_Glutaric_acid_and_MG_m_z_345_203; RCT:Triad_synthesis_product_Succinic_acid_and_MA_m_z_345_203; RCT:Diad_synthesis_product_5_aminovalerate_and_C8_diamine_m_z_24; RCT:Triad_synthesis_product_Adipic_acid_and_MG_m_z_359_218; RCT:Triad_synthesis_product_Succinic_acid_and_MG_m_z_331_187
+sample_parameter	idea_reaction_id	VARCHAR	identifier (foreign key)	tetrad_v1		yes	idea_reaction	id			32	0	0.0	high	Reaction the value is scoped to.	RXN:26; RXN:24; RXN:18; RXN:21; RXN:11; RXN:12
+sample_parameter	label	VARCHAR	measured value	both							3	0	0.0	high	What was measured — the attribute name (e.g. titer, conversion, mass-spec intensity).	titer; mass-spec intensity; conversion
+sample_parameter	value	VARCHAR	measured value	both							246	0	0.0	high	The measured value (stored as text; value_type gives its type).	6716630.28760668; 165420.304730248; 1148676.0122244; 473194.715851398; 959802.133397492; 3563588.0113865267
+sample_parameter	value_type	VARCHAR	measured value	tetrad_v1							1	0	0.0	high	Declared type of the value (e.g. real).	real
+sample_parameter	unit	VARCHAR	measured value	both							3	0	0.0	high	Unit of the measured value.	%; mg/L; intensity (a.u.)
+sample_parameter	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	492	100.0	high	Row creation timestamp (provenance).	
+sample_parameter	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	492	100.0	high	Row last-updated timestamp (provenance).	
+sample_parameter	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+sample_protein	id	BIGINT	identifier (primary key)	both	yes						354	0	0.0	high	Junction row identifier.	93; 47; 49; 285; 158; 181
+sample_protein	sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			354	0	0.0	high	The sample.	SMP:56; SMP:59; SMP:75; SMP:96; SMP:102; SMP:137
+sample_protein	idea_protein_id	VARCHAR	identifier (foreign key)	both		yes	idea_protein	id			6	0	0.0	high	The protein present in the sample.	PROT:AsbB; PROT:DdaG; PROT:DesD; PROT:SfaB; PROT:AcsA; PROT:AsbA
+sample_protein	idea_mutant_id	VARCHAR	identifier (foreign key)	both		yes	idea_mutant	id			0	354	100.0	high	The engineered variant present, if any (no mutant table in this release).	
+sample_protein	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	354	100.0	high	Row creation timestamp (provenance).	
+sample_protein	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	354	100.0	high	Row last-updated timestamp (provenance).	
+sample_protein	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+sample_reactant	id	BIGINT	identifier (primary key)	both	yes						846	0	0.0	high	Junction row identifier.	101; 103; 117; 129; 145; 191
+sample_reactant	sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			450	0	0.0	high	The sample.	SMP:20; SMP:28; SMP:56; SMP:59; SMP:75; SMP:96
+sample_reactant	idea_reactant_id	VARCHAR	identifier (foreign key)	both		yes	idea_reactant	id			19	0	0.0	high	The reactant added.	RCT:XA; RCT:Glutaric_acid; RCT:C7_amino_acid; RCT:p_Xylylenediamine; RCT:C9_diacid; RCT:C8_amino_acid
+sample_reactant	concentration	DOUBLE	measured value	both							0	846	100.0	high	Concentration of the reactant in the sample.	
+sample_reactant	concentration_unit	VARCHAR	measured value	both							0	846	100.0	high	Unit of the concentration.	
+sample_reactant	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	846	100.0	high	Row creation timestamp (provenance).	
+sample_reactant	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	846	100.0	high	Row last-updated timestamp (provenance).	
+sample_reactant	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1
+sample_reaction	id	BIGINT	identifier (primary key)	both	yes						450	0	0.0	high	Junction row identifier.	21; 25; 399; 400; 87; 95
+sample_reaction	sample_id	VARCHAR	identifier (foreign key)	both		yes	idea_sample	id			450	0	0.0	high	The sample.	SMP:127; SMP:140; SMP:154; SMP:178; SMP:191; SMP:200
+sample_reaction	idea_reaction_id	VARCHAR	identifier (foreign key)	both		yes	idea_reaction	id			32	0	0.0	high	The reaction the sample runs.	RXN:4; RXN:31; RXN:28; RXN:2; RXN:13; RXN:26
+sample_reaction	is_primary	BOOLEAN	descriptor	both							1	0	0.0	high	Whether this is the sample's primary reaction.	True
+sample_reaction	created_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row creation timestamp (provenance).	
+sample_reaction	updated_at	TIMESTAMP WITH TIME ZONE	provenance	tetrad_v1							0	450	100.0	high	Row last-updated timestamp (provenance).	
+sample_reaction	created_by	VARCHAR	provenance	tetrad_v1							1	0	0.0	high	Who/what created the row — here the ETL steward (provenance).	etl:ideas-tetrad-v1

@@ -44,11 +44,35 @@ let M = null;          // metadata
 let TBL = {};          // name -> table object
 
 const VIEWS = [
-  ["overview","Overview"], ["project","The Project"], ["schema","Schema & ERD"], ["tables","Tables"],
+  ["overview","Overview"], ["project","The Project"], ["schema","Schema & ERD"],
+  ["linkml","Schema (LinkML)"], ["tables","Tables"],
   ["dict","Data Dictionary"], ["rel","Relationships"], ["measure","Measurements"],
   ["onto","Ontologies & Units"], ["quality","Data Quality"], ["explore","Iceberg & Files"],
   ["download","Download"],
 ];
+
+// ---- release flags: which release each table / column / parameter came from ----
+// UNION of the earlier all-TEXT release (21 tables) and the typed tetrad_v1 release (12 tables).
+const RLS = {
+  both:      {cls:"rls-both", sym:"=", label:"in both releases (unchanged)"},
+  tetrad_v1: {cls:"rls-new", sym:"+", label:"added in tetrad_v1"},
+  earlier:   {cls:"rls-old", sym:"−", label:"only in earlier release — dropped in tetrad_v1"},
+};
+function releaseBadge(state, opts={}){
+  const r = RLS[state] || RLS.both;
+  let title = opts.title || r.label;
+  if(opts.removed) title = "column removed in tetrad_v1 (present in earlier release only)";
+  return el("span",{class:"rls "+r.cls, title}, r.sym);
+}
+function releaseLegend(){
+  const wrap = el("div",{class:"legend rls-legend"});
+  const leg = (M.releases && M.releases.legend) || [];
+  leg.forEach(x=>{
+    const r = RLS[x.state] || RLS.both;
+    wrap.append(el("span",{},[el("span",{class:"rls "+r.cls}, x.symbol||r.sym), " ", x.label]));
+  });
+  return wrap;
+}
 
 /* =============================================================== boot */
 fetch("metadata.json").then(r=>r.json()).then(m=>{
@@ -83,7 +107,8 @@ function route(){
   const app=$("#app"); app.innerHTML="";
   const view = el("section",{class:"view on",id:"view-"+id});
   app.append(view);
-  ({overview:renderOverview,project:renderProject,schema:renderSchema,tables:renderTables,dict:renderDict,
+  ({overview:renderOverview,project:renderProject,schema:renderSchema,linkml:renderLinkml,
+    tables:renderTables,dict:renderDict,
     rel:renderRel,measure:renderMeasure,onto:renderOnto,quality:renderQuality,
     explore:renderExplore,download:renderDownload}[id]||renderOverview)(view,arg);
   window.scrollTo(0,0);
@@ -223,7 +248,82 @@ function renderOverview(v){
   ];
   inv.append(sortableTable(cols, M.files, {placeholder:"Filter files…", sort:"name"}));
 
-  v.append(hero,tiles,about,inv);
+  v.append(hero,tiles,about,releasePanel(),inv);
+}
+
+/* What changed between the earlier release and the newer tetrad_v1 release.
+   Renders from M.releases (see also the inline badges throughout the portal). */
+function releasePanel(){
+  const R = M.releases; if(!R) return null;
+  const c = el("div",{class:"card"});
+  c.append(el("h3",{style:"margin-top:0"},"What changed between releases"));
+  c.append(el("p",{class:"ink2",style:"margin-top:0;max-width:82ch"},
+    `This portal shows the UNION of two releases so nothing is lost. The earlier all-TEXT release had `+
+    `${R.earlier.n_tables} tables / ${fmt(R.earlier.n_rows)} rows; the newer typed `+
+    `${R.tetrad_v1.name} release has ${R.tetrad_v1.n_tables} tables / ${fmt(R.tetrad_v1.n_rows)} rows. `+
+    `Everywhere in the portal a small badge marks which release each table, column and measured parameter came from:`));
+  c.append(releaseLegend());
+
+  // headline counts
+  const tiles = el("div",{class:"tiles",style:"margin-top:.7rem"});
+  const stat=(n,l,s,badge)=>el("div",{class:"tile"},[
+    el("div",{class:"n"},[badge?releaseBadge(badge):null," ",fmt(n)]),
+    el("div",{class:"l"},l), s?el("div",{class:"s"},s):null]);
+  tiles.append(
+    stat(R.tables_both.length,"Tables in both","carried forward (typed)","both"),
+    stat(R.tables_only_earlier.length,"Tables dropped","restored here from earlier","earlier"),
+    stat(R.added_columns.length,"Columns added","in tetrad_v1","tetrad_v1"),
+    stat(R.removed_columns.length,"Columns removed","kept & flagged","earlier"),
+  );
+  c.append(tiles);
+
+  // dropped tables (names)
+  if(R.tables_only_earlier.length){
+    const d=el("div",{style:"margin-top:.6rem"});
+    d.append(el("div",{class:"ink2",style:"font-weight:600;margin-bottom:.25rem"},
+      [releaseBadge("earlier")," ",`${R.tables_only_earlier.length} tables were in the earlier release but dropped in ${R.tetrad_v1.name} (restored here):`]));
+    const wrap=el("div",{style:"display:flex;gap:.35rem;flex-wrap:wrap"});
+    R.tables_only_earlier.forEach(tn=>wrap.append(
+      TBL[tn]? el("a",{href:"#tables/"+tn,class:"tag mono"},tn) : el("span",{class:"tag mono"},tn)));
+    d.append(wrap); c.append(d);
+  }
+
+  // added / removed columns
+  const colLine=(state,label,arr)=>{
+    if(!arr||!arr.length) return null;
+    const d=el("div",{style:"margin-top:.5rem"});
+    d.append(el("span",{class:"ink2",style:"font-weight:600"},[releaseBadge(state)," ",label+": "]));
+    d.append(el("span",{class:"mono ink2",style:"font-size:.84rem"},arr.join(", ")));
+    return d;
+  };
+  c.append(colLine("tetrad_v1","Columns added in tetrad_v1",R.added_columns));
+  c.append(colLine("earlier","Columns removed in tetrad_v1 (documented, values shown from earlier release)",R.removed_columns));
+  if(R.audit_note) c.append(el("p",{class:"muted",style:"margin:.5rem 0 0;font-size:.84rem"},R.audit_note));
+
+  // narrative summary
+  if(R.summary && R.summary.length){
+    const ul=el("ul",{class:"proselist",style:"margin-top:.6rem"});
+    R.summary.forEach(s=>ul.append(el("li",{class:"ink2"},s)));
+    c.append(ul);
+  }
+
+  // essential-but-missing
+  if(R.essential_missing && R.essential_missing.length){
+    c.append(el("h4",{style:"margin:.8rem 0 .3rem"},
+      [releaseBadge("earlier")," Essential data missing from the newer release"]));
+    c.append(el("p",{class:"muted",style:"margin:0 0 .4rem"},
+      "What the reduced tetrad_v1 release leaves out that the hackathon and the AI↔experiment loop rely on — all restored in this union view."));
+    const g=el("div",{class:"dlgrid"});
+    R.essential_missing.forEach(e=>{
+      const d=el("div",{class:"dl",style:"cursor:default"});
+      const body=el("div",{style:"flex:1"});
+      body.append(el("h4",{},e.item));
+      body.append(el("div",{class:"ink2",style:"font-size:.84rem;margin-top:.15rem"},e.why));
+      d.append(body); g.append(d);
+    });
+    c.append(g);
+  }
+  return c;
 }
 function human(b){ if(b<1024)return b+" B"; if(b<1048576)return (b/1024).toFixed(1)+" KB"; return (b/1048576).toFixed(1)+" MB"; }
 
@@ -399,6 +499,8 @@ function renderSchema(v){
     el("span",{},[el("span",{class:"swatch",style:"background:var(--accent)"}),"inferred FK (naming + 100% value match)"]),
     el("span",{},[el("span",{class:"swatch",style:"background:var(--warn)"}),"uncertain FK (unvalidated / orphaned)"]),
   ]);
+  const rlegend=releaseLegend();
+  rlegend.style.marginTop=".4rem";
 
   const toolbar=el("div",{class:"erd-toolbar"},[
     el("button",{id:"erd-zout",title:"Zoom out"},"−"),
@@ -412,7 +514,7 @@ function renderSchema(v){
   ]);
   const scroll=el("div",{class:"erd-scroll",id:"erdhost"});
   const card=el("div",{class:"card"});
-  card.append(legend,toolbar,scroll);
+  card.append(legend,rlegend,toolbar,scroll);
   v.append(card);
 
   // adjustable canvas: restore saved size, persist on resize, quick controls
@@ -462,7 +564,7 @@ function drawERD(){
       return {name:c, pk:m.is_primary_key==="yes", fk:m.is_foreign_key==="yes", type:m.short_type||typeShort(m.data_type)};
     });
     const idx={}; t.columns.forEach((c,i)=>idx[c]=i);
-    model[t.name]={fields, idx, cat:colBy(t.name), nrows:t.nrows, desc:t.desc||t.name};
+    model[t.name]={fields, idx, cat:colBy(t.name), nrows:t.nrows, desc:t.desc||t.name, release:t.release||"both"};
   });
 
   /* ---- layout: category columns, stacked ---- */
@@ -552,10 +654,11 @@ function drawERD(){
     const hp=svgEl("path",{d:`M0 ${HH} L0 9 Q0 0 9 0 L ${TW-9} 0 Q ${TW} 0 ${TW} 9 L ${TW} ${HH} Z`});
     hp.style.fill=CATCOLOR[m.cat];
     head.append(hp);
-    head.append(Object.assign(svgEl("text",{x:11,y:19}),{textContent:name}));
+    const rsym = (RLS[m.release]||RLS.both).sym;
+    head.append(Object.assign(svgEl("text",{x:11,y:19}),{textContent: m.release==="both"?name:`${name}  ${rsym}`}));
     const cnt=svgEl("text",{class:"cnt",x:TW-9,y:19,"text-anchor":"end"}); cnt.textContent=`${m.nrows}`;
     head.append(cnt);
-    head.append(mkTitle(`${name} — ${m.desc}`));
+    head.append(mkTitle(`${name} — ${m.desc}  ·  ${(RLS[m.release]||RLS.both).label}`));
     g.append(head);
     // fields
     m.fields.forEach((f,i)=>{
@@ -711,6 +814,138 @@ function drawERD(){
 }
 function mkTitle(txt){ const t=document.createElementNS("http://www.w3.org/2000/svg","title"); t.textContent=txt; return t; }
 
+/* =============================================================== Schema (LinkML) */
+function renderLinkml(v){
+  const K=M.linkml;
+  v.append(el("h2",{},"Schema as LinkML"));
+  if(!K){ v.append(el("p",{class:"muted"},"LinkML schema not available in this build.")); return; }
+  v.append(el("p",{class:"sec-intro",html:'<b>LinkML</b> (Linked Data Modeling Language) is the schema language the DOE <b>BRIDGE</b> project uses to describe every dataset the same way: classes, typed slots, controlled units and CURIE identifiers, all resolvable to shared base classes. A LinkML schema is both human-readable YAML and machine-actionable — it can generate JSON-Schema, SQL DDL, Python/Pydantic classes, SHACL and documentation, and is what gets registered in the <a href="https://github.com/ber-data/lakehouse-registry" target="_blank" rel="noopener">BRIDGE lakehouse registry</a>. This page is the IDEAS schema rendered against the BRIDGE base model — and the worked example for the first modelling hackathon.'}));
+
+  // stat tiles
+  const tiles=el("div",{class:"tiles"});
+  const stat=(n,l,s)=>el("div",{class:"tile"},[el("div",{class:"n"},fmt(n)),el("div",{class:"l"},l),s?el("div",{class:"s"},s):null]);
+  const nMeas=(K.classes||[]).filter(c=>c.is_measurement).length;
+  tiles.append(
+    stat(K.n_classes,"Classes","one per table + base classes"),
+    stat(K.n_slots,"Slots","typed attributes"),
+    stat((K.bases||[]).length,"BRIDGE base classes","shared backbone"),
+    stat(nMeas,"Measurement classes","attribute / value / unit"),
+  );
+  v.append(tiles);
+
+  // schema identity
+  const idc=el("div",{class:"card"});
+  const dl=el("dl",{class:"kv"});
+  const add=(k,val)=>dl.append(el("dt",{},k),el("dd",{},val));
+  add("Schema name",el("span",{class:"mono"},K.name));
+  add("Schema id",el("span",{class:"mono"},K.schema_id));
+  add("Default range",el("span",{class:"mono"},"string"));
+  add("Download",el("a",{href:K.download,download:"ideas.linkml.yaml",class:"tag"},"↓ ideas.linkml.yaml"));
+  idc.append(el("h3",{style:"margin-top:0"},"Schema identity"),dl);
+  v.append(idc);
+
+  // rules checklist
+  if(K.rules && K.rules.length){
+    v.append(el("h3",{},"BRIDGE modelling rules — and how this schema meets them"));
+    v.append(el("p",{class:"muted",style:"margin-top:0"},"The conventions every BRIDGE dataset schema must follow (from the project notes), each with how the IDEAS schema satisfies it."));
+    K.rules.forEach(r=>{
+      const d=el("div",{class:"rulecard"});
+      d.append(el("div",{class:"rc-head"},[el("span",{class:"rc-check"},"✓"),el("b",{},r.rule)]));
+      d.append(el("div",{class:"ink2",style:"margin-top:.2rem"},r.how_ideas_meets));
+      v.append(d);
+    });
+  }
+
+  // base classes -> tables
+  if(K.bases && K.bases.length){
+    v.append(el("h3",{},"The shared base model"));
+    v.append(el("p",{class:"muted",style:"margin-top:0"},"BRIDGE models everything against a small set of base classes. Each IDEAS table is declared as a subclass (is_a) of one of these — the same backbone every BRIDGE resource shares."));
+    const grid=el("div",{class:"dlgrid"});
+    K.bases.forEach(b=>{
+      const d=el("div",{class:"dl",style:"cursor:default"});
+      const body=el("div",{style:"flex:1"});
+      body.append(el("h4",{},b.name));
+      body.append(el("div",{class:"ink2",style:"font-size:.84rem;margin:.15rem 0"},b.desc));
+      const tw=el("div",{style:"display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.25rem"});
+      (b.tables||[]).forEach(tn=>tw.append(TBL[tn]?el("a",{href:"#tables/"+tn,class:"tag mono"},tn):el("span",{class:"tag mono muted"},tn)));
+      if(!b.tables||!b.tables.length) tw.append(el("span",{class:"muted"},"—"));
+      body.append(tw); d.append(body); grid.append(d);
+    });
+    v.append(grid);
+  }
+
+  // class -> base mapping table
+  if(K.classes && K.classes.length){
+    v.append(el("h3",{},"Classes"));
+    v.append(el("p",{class:"muted",style:"margin-top:0"},"Every table as a LinkML class, its base class, and the release it came from. Measurement classes (the attribute/value/unit pattern) are highlighted — they are the hackathon target."));
+    v.append(releaseLegend());
+    const cols=[
+      {key:"name",label:"Class",cls:"mono",render:r=>el("span",{},[
+        r.is_measurement?el("span",{class:"pill declared",title:"measurement (attribute/value/unit) class"},"MEAS"):null,
+        r.is_measurement?" ":null, el("a",{href:"#tables/"+r.table},r.name)," ", releaseBadge(r.release)]),raw:r=>r.name},
+      {key:"base_class",label:"is_a (base class)",render:r=>el("span",{class:"ink2"},r.base_class)},
+      {key:"nrows",label:"Rows",num:true,render:r=>fmt(r.nrows),raw:r=>r.nrows},
+      {key:"n_slots",label:"Slots",num:true},
+      {key:"base_desc",label:"What the base class represents",render:r=>el("span",{class:"muted"},r.base_desc)},
+    ];
+    v.append(sortableTable(cols,K.classes,{placeholder:"Search classes…",sort:"name"}));
+  }
+
+  // measurement modelling worked example
+  const meas=(K.classes||[]).filter(c=>c.is_measurement);
+  if(meas.length){
+    const c=el("div",{class:"card",style:"border-left:4px solid var(--c-measure)"});
+    c.append(el("div",{class:"kicker"},"Hackathon worked example"));
+    c.append(el("h3",{style:"margin:.2rem 0 .3rem"},"Modelling a measurement in LinkML"));
+    c.append(el("p",{class:"ink2",style:"margin-top:0",html:'BRIDGE models a measurement as an <b>attribute + value + unit</b> triple attached to an observed sample, with the unit carrying an ontology (UCUM) code and provenance recorded on every record. In this schema that pattern is the <code>MeasurementValue</code> base class, realised by:'}));
+    const grid=el("div",{class:"dlgrid"});
+    meas.forEach(m=>{
+      const d=el("div",{class:"dl",style:"cursor:default"}); const b=el("div",{style:"flex:1"});
+      b.append(el("h4",{},[el("a",{href:"#tables/"+m.table,class:"mono"},m.name)," ",releaseBadge(m.release)]));
+      b.append(el("div",{class:"ink2",style:"font-size:.84rem;margin:.15rem 0"},
+        `is_a ${m.base_class} · ${fmt(m.nrows)} rows · ${m.n_slots} slots`));
+      // list attribute/value/unit slots if present
+      const key=(m.slots||[]).filter(s=>/^(label|value|unit|attribute|value_type)$/i.test(s.name));
+      if(key.length){
+        const tw=el("div",{style:"display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.2rem"});
+        key.forEach(s=>tw.append(el("span",{class:"tag mono",title:s.unit?"unit slot (UCUM-annotated)":s.range},s.name+": "+s.range)));
+        b.append(tw);
+      }
+      d.append(b); grid.append(d);
+    });
+    c.append(grid);
+    // UCUM unit table
+    if(K.units && K.units.length){
+      c.append(el("h4",{style:"margin:.8rem 0 .2rem"},"Units are UCUM-coded"));
+      c.append(el("p",{class:"muted",style:"margin:0 0 .3rem"},"Every unit in the data maps to a machine-readable UCUM code in the schema, so the same quantity is comparable across datasets."));
+      const uc=el("div",{style:"display:flex;gap:.4rem;flex-wrap:wrap"});
+      K.units.forEach(u=>uc.append(el("span",{class:"tag mono"},`${u.unit} → ${u.ucum}`)));
+      c.append(uc);
+    }
+    v.append(c);
+  }
+
+  // prefixes
+  if(K.prefixes && K.prefixes.length){
+    v.append(el("h3",{},"CURIE prefixes"));
+    v.append(el("p",{class:"muted",style:"margin-top:0"},"Identifiers are CURIEs (prefix:local) resolvable via these bioregistry-style prefixes, declared in the schema's prefixes block."));
+    const pc=[
+      {key:"prefix",label:"Prefix",cls:"mono"},
+      {key:"uri",label:"Expands to",cls:"mono",render:r=>/^https?:/.test(r.uri)?el("a",{href:r.uri,target:"_blank",rel:"noopener"},r.uri):r.uri,raw:r=>r.uri},
+    ];
+    v.append(sortableTable(pc,K.prefixes,{placeholder:"Search prefixes…",sort:"prefix"}));
+  }
+
+  // full YAML
+  v.append(el("h3",{},"Full LinkML schema (YAML)"));
+  v.append(el("p",{class:"muted",style:"margin-top:0"},["The complete generated schema. ",
+    el("a",{href:K.download,download:"ideas.linkml.yaml"},"Download ideas.linkml.yaml"),
+    " to feed the LinkML toolchain (gen-json-schema, gen-sqlddl, gen-pydantic, gen-owl…)."]));
+  const box=el("div",{class:"linkml-yaml"});
+  box.append(el("pre",{},K.yaml||""));
+  v.append(box);
+}
+
 /* =============================================================== Tables */
 function renderTables(v,arg){
   if(arg && TBL[arg]) return renderTableDetail(v,arg);
@@ -734,7 +969,8 @@ function renderTables(v,arg){
     list.sort((a,b)=>b.nrows-a.nrows).forEach(t=>{
       const c=el("div",{class:"tcard",onclick:()=>go("tables/"+t.name)});
       c.style.borderLeftColor=CATCOLOR[catOf(t.name)];
-      c.append(el("h4",{},[t.name, t.nrows===0?el("span",{class:"pill info"},"empty"):null]));
+      c.append(el("h4",{},[t.name, t.release?releaseBadge(t.release):null,
+        t.nrows===0?el("span",{class:"pill info"},"empty"):null]));
       c.append(el("p",{},t.desc||"—"));
       c.append(el("div",{class:"foot"},[
         el("span",{},`${fmt(t.nrows)} rows`), el("span",{},`${t.ncols} cols`),
@@ -752,7 +988,13 @@ function renderTableDetail(v,name){
   v.append(el("button",{class:"backlink",onclick:()=>go("tables")},"← All tables"));
   const head=el("div",{class:"card"});
   head.append(el("h2",{style:"font-family:var(--mono);display:flex;align-items:center;gap:.5rem;flex-wrap:wrap"},
-     [name, el("span",{class:"pill",style:`background:transparent;color:${CATCOLOR[catOf(name)]};border:1px solid ${CATCOLOR[catOf(name)]}`},CATLABEL[catOf(name)])]));
+     [name, t.release?releaseBadge(t.release):null, el("span",{class:"pill",style:`background:transparent;color:${CATCOLOR[catOf(name)]};border:1px solid ${CATCOLOR[catOf(name)]}`},CATLABEL[catOf(name)])]));
+  if(t.release && t.release!=="both"){
+    head.append(el("p",{class:"muted",style:"margin:.2rem 0 0"},
+      t.release==="earlier"
+        ? "This table was in the earlier release only — dropped in tetrad_v1 and restored here from the earlier all-TEXT parquet export."
+        : "This table was added in the typed tetrad_v1 release."));
+  }
   head.append(el("p",{class:"ink2",style:"max-width:78ch"},t.desc||""));
   const dl=el("dl",{class:"kv"});
   const add=(k,val)=>{dl.append(el("dt",{},k),el("dd",{},val));};
@@ -770,7 +1012,9 @@ function renderTableDetail(v,name){
   const cm=t.col_meta;
   const ccols=[
     {key:"field_name",label:"Field",cls:"mono",render:r=>{
-      const b=[r.field_name];
+      const nm = r.is_removed ? el("s",{title:"removed in tetrad_v1"},r.field_name) : r.field_name;
+      const b=[nm];
+      if(r.release) b.push(" ",releaseBadge(r.release,{removed:r.is_removed}));
       if(r.is_primary_key) b.push(" ",el("span",{class:"pill declared",title:"primary key"},"PK"));
       if(r.is_foreign_key) b.push(" ",el("span",{class:"pill inferred",title:"foreign key"},"FK"));
       return el("span",{},b);
@@ -807,7 +1051,7 @@ function renderDict(v){
   ];
   const cols=[
     {key:"table_name",label:"Table",cls:"mono"},
-    {key:"field_name",label:"Field",cls:"mono",render:r=>{const b=[r.field_name];if(r.is_primary_key)b.push(" ",el("span",{class:"pill declared"},"PK"));if(r.is_foreign_key)b.push(" ",el("span",{class:"pill inferred"},"FK"));return el("span",{},b);},raw:r=>r.field_name},
+    {key:"field_name",label:"Field",cls:"mono",render:r=>{const b=[r.is_removed?el("s",{title:"removed in tetrad_v1"},r.field_name):r.field_name];if(r.release)b.push(" ",releaseBadge(r.release,{removed:r.is_removed}));if(r.is_primary_key)b.push(" ",el("span",{class:"pill declared"},"PK"));if(r.is_foreign_key)b.push(" ",el("span",{class:"pill inferred"},"FK"));return el("span",{},b);},raw:r=>r.field_name},
     {key:"role",label:"Role"},
     {key:"data_type",label:"Type",cls:"mono",render:r=>r.data_type.replace(" (source) / "," → ").replace(" (intended)","")},
     {key:"foreign_table",label:"References",render:r=>r.foreign_table?el("a",{href:"#tables/"+r.foreign_table,class:"tag"},r.foreign_table+"."+r.foreign_field):""},
@@ -860,41 +1104,28 @@ function renderRel(v){
 /* =============================================================== Measurements */
 // Aggregate the EAV measured-value tables into one (parameter × unit) catalogue
 // with numeric summaries. Shared by the Measurements tab and the unit reference.
+// Drive the catalogue from the backend's union parameter list (M.measurements.eav_parameters),
+// which spans BOTH releases: assay readouts (tetrad_v1) + reaction conditions + computed protein
+// metrics (earlier release). Each param already carries unit, release, source_table, quantity,
+// kind, meaning and numeric min/median/max.
+const KIND_GROUP={
+  "assay readout":"Assay readout (measured)",
+  "condition":"Reaction condition",
+  "computed metric":"Computed protein metric",
+};
 function measureCatalogue(){
-  const MEAS=[["sample_parameter","assay readout (mass-spec intensity / titer / conversion)"]];
-  const numRe=/^-?\d+(\.\d+)?([eE][-+]?\d+)?$/;
-  const params=[];
-  MEAS.forEach(([tn,kind])=>{
-    const t=TBL[tn]; if(!t) return;
-    const ci=t.columns.indexOf("label"), ui=t.columns.indexOf("unit"), vi=t.columns.indexOf("value");
-    if(ci<0) return;
-    const agg={};
-    t.rows.forEach(r=>{
-      const lab=r[ci]==null?"":r[ci], un=(ui>=0?(r[ui]||""):"");
-      const a=agg[lab+"\u0000"+un]||(agg[lab+"\u0000"+un]={parameter:lab,unit:un,table:tn,kind,vals:[],miss:0,ex:[]});
-      const val=(vi>=0?r[vi]:"");
-      if(val==null||val==="") a.miss++;
-      else{ a.vals.push(val); if(a.ex.length<3) a.ex.push(val); }
-    });
-    Object.values(agg).forEach(a=>params.push(a));
+  const eav=(M.measurements&&M.measurements.eav_parameters)||[];
+  return eav.map(p=>{
+    const numeric = p.min!=null;
+    const tbl = String(p.source_table||"").replace(/\s*\(earlier\)$/,"");
+    return {
+      parameter:p.label, unit:p.unit||"", table:tbl, source_table:p.source_table||tbl,
+      kind:p.kind||"", release:p.release||"both", quantity:p.quantity||"—",
+      meaning:p.meaning||"", numeric, records:p.records||0,
+      min:p.min, median:p.median, max:p.max,
+      group: KIND_GROUP[p.kind] || (p.unit?(UNIT_GROUP[p.unit]||"Other measured quantity"):"Other measured quantity"),
+    };
   });
-  params.forEach(a=>{
-    const n=a.vals.length, total=n+a.miss;
-    const nums=a.vals.filter(x=>numRe.test(x)).map(Number);
-    a.numeric = n>0 && nums.length===n;
-    a.records=total;
-    a.missPct = total? Math.round(1000*a.miss/total)/10 : 0;
-    if(a.numeric && nums.length){
-      nums.sort((x,y)=>x-y);
-      a.min=nums[0]; a.max=nums[nums.length-1];
-      a.median = nums.length%2 ? nums[(nums.length-1)/2] : (nums[nums.length/2-1]+nums[nums.length/2])/2;
-    }
-    a.quantity = a.unit ? (UNIT_REF[a.unit]?UNIT_REF[a.unit].quantity:"—")
-                        : (a.numeric?"Numeric (unitless)":"Categorical / text");
-    a.group = a.unit ? (UNIT_GROUP[a.unit]||"Other measured quantity")
-                     : (a.numeric?"Unitless numeric":"Categorical condition (no unit)");
-  });
-  return params;
 }
 function fmtMeas(x){
   if(x===0) return "0";
@@ -904,7 +1135,39 @@ function fmtMeas(x){
 }
 function renderMeasure(v){
   v.append(el("h2",{},"Measurements & observations"));
-  v.append(el("p",{class:"sec-intro",html:'This is the heart of the dataset and the current focus of the BRIDGE Data Modeling Team (see <a href="#project">The Project</a>). A <b>measurement / observation</b> is a value produced by an <b>instrument or assay</b> against a <b>sample</b>. Here that is modelled in two layers: <code>idea_measurement</code> records each measurement <b>event</b> (what was run, on which sample, from which raw file), and <code>sample_parameter</code> holds the resulting <b>values</b> as label / value / unit rows (the entity–attribute–value pattern), each typed <code>real</code>. Categories below are grouped by the physical quantity of the unit (UCUM-grounded).'}));
+  v.append(el("p",{class:"sec-intro",html:'This is the heart of the dataset and the current focus of the BRIDGE Data Modeling Team (see <a href="#project">The Project</a>). A <b>measurement / observation</b> is a value produced by an <b>instrument or assay</b> against a <b>sample</b>. Here that is modelled in two layers: <code>idea_measurement</code> records each measurement <b>event</b> (what was run, on which sample, from which raw file), and the measured <b>values</b> are held as label / value / unit rows — the entity–attribute–value (EAV) pattern — in <code>sample_parameter</code> (assay readouts + reaction conditions) and <code>protein_parameter</code> (computed protein metrics). Categories below are grouped by kind of measurement, and each parameter is flagged by the release it came from.'}));
+
+  /* ---- hackathon framing (drawn from the project notes) ---- */
+  const HK=M.hackathon;
+  if(HK){
+    const c=el("div",{class:"card",style:"border-left:4px solid var(--accent)"});
+    c.append(el("div",{class:"kicker"},"Hackathon focus"));
+    c.append(el("h3",{style:"margin:.2rem 0 .1rem"},HK.title));
+    c.append(el("p",{class:"muted",style:"margin:0 0 .5rem"},HK.when));
+    if(HK.focus) c.append(el("p",{class:"ink2",style:"margin:.2rem 0"},[el("b",{},"Goal: "),HK.focus]));
+    if(HK.pattern && HK.pattern.length){
+      c.append(el("h4",{style:"margin:.7rem 0 .2rem"},"The measurement modelling pattern"));
+      const ul=el("ul",{class:"proselist"}); HK.pattern.forEach(x=>ul.append(el("li",{class:"ink2"},x))); c.append(ul);
+    }
+    const two=el("div",{class:"dlgrid"});
+    if(HK.homework && HK.homework.length){
+      const d=el("div",{class:"dl",style:"cursor:default"}); const b=el("div",{style:"flex:1"});
+      b.append(el("h4",{},"Come prepared with"));
+      const ul=el("ul",{class:"proselist",style:"margin:.2rem 0 0"}); HK.homework.forEach(x=>ul.append(el("li",{class:"ink2"},x))); b.append(ul);
+      d.append(b); two.append(d);
+    }
+    if(HK.how_this_dataset_helps){
+      const d=el("div",{class:"dl",style:"cursor:default"}); const b=el("div",{style:"flex:1"});
+      b.append(el("h4",{},"How this dataset helps"));
+      b.append(el("div",{class:"ink2",style:"font-size:.86rem;margin-top:.2rem"},HK.how_this_dataset_helps));
+      b.append(el("div",{style:"margin-top:.4rem"},el("a",{href:"#linkml",class:"tag"},"→ See the LinkML schema tab")));
+      d.append(b); two.append(d);
+    }
+    c.append(two);
+    v.append(c);
+  }
+
+  v.append(releaseLegend());
 
   /* ---- measurement events (idea_measurement) ---- */
   const MM=(M.measurements||{});
@@ -938,10 +1201,7 @@ function renderMeasure(v){
   v.append(el("h3",{},"By measurement category"));
   const groups={};
   params.forEach(p=>{ (groups[p.group]=groups[p.group]||[]).push(p); });
-  const gorder=["Concentration","Volume","Incubation condition","Proteomics readout (abundance)",
-    "Proteomics readout (fold-change)","Proteomics readout (intensity)","Ratio / fraction",
-    "Structural prediction","Structural / model score","Sequence-model score",
-    "Unitless numeric","Other measured quantity","Categorical condition (no unit)"];
+  const gorder=["Assay readout (measured)","Reaction condition","Computed protein metric","Other measured quantity"];
   const gkeys=Object.keys(groups).sort((a,b)=>{
     const ia=gorder.indexOf(a), ib=gorder.indexOf(b);
     return (ia<0?99:ia)-(ib<0?99:ib);
@@ -962,20 +1222,19 @@ function renderMeasure(v){
 
   /* full catalogue */
   v.append(el("h3",{},"All measured parameters"));
-  v.append(el("p",{class:"muted",style:"margin-top:0"},"Search or sort by any column — including category, unit, or missingness. Min / median / max are computed from the numeric values; “—” marks non-numeric (categorical) parameters."));
+  v.append(el("p",{class:"muted",style:"margin-top:0"},"Search or sort by any column — including category, unit, or release. Min / median / max are computed from the numeric values; “—” marks non-numeric (categorical) parameters. The release badge marks which dataset each parameter came from (＋ tetrad_v1 assay readouts, − earlier conditions & protein metrics)."));
   const cols=[
-    {key:"parameter",label:"Parameter",cls:"mono"},
+    {key:"parameter",label:"Parameter",cls:"mono",render:r=>el("span",{},[r.parameter," ",releaseBadge(r.release)]),raw:r=>r.parameter},
     {key:"group",label:"Category",render:r=>el("span",{class:"ink2"},r.group)},
     {key:"unit",label:"Unit",cls:"mono",render:r=>r.unit?r.unit:el("span",{class:"muted"},"—"),raw:r=>r.unit},
-    {key:"quantity",label:"Quantity / meaning",render:r=>el("span",{class:"muted"},r.quantity),raw:r=>r.quantity},
-    {key:"table",label:"Source table",cls:"mono",render:r=>el("a",{href:"#tables/"+r.table},r.table),raw:r=>r.table},
+    {key:"quantity",label:"Quantity",render:r=>el("span",{class:"ink2"},r.quantity),raw:r=>r.quantity},
+    {key:"table",label:"Source table",cls:"mono",render:r=>TBL[r.table]?el("a",{href:"#tables/"+r.table},r.source_table):r.source_table,raw:r=>r.source_table},
     {key:"type",label:"Type",render:r=>r.numeric?"numeric":"categorical",raw:r=>r.numeric?1:0},
     {key:"min",label:"Min",num:true,render:r=>r.numeric?fmtMeas(r.min):"—",raw:r=>r.numeric?r.min:null},
     {key:"median",label:"Median",num:true,render:r=>r.numeric?fmtMeas(r.median):"—",raw:r=>r.numeric?r.median:null},
     {key:"max",label:"Max",num:true,render:r=>r.numeric?fmtMeas(r.max):"—",raw:r=>r.numeric?r.max:null},
-    {key:"missPct",label:"Missing %",num:true,render:r=>r.missPct+"%",raw:r=>r.missPct},
     {key:"records",label:"Records",num:true},
-    {key:"ex",label:"Examples",cls:"mono",render:r=>r.ex.map(x=>String(x).length>16?String(x).slice(0,15)+"…":x).join(", "),raw:r=>r.ex.join(", ")},
+    {key:"meaning",label:"Meaning",render:r=>el("span",{class:"ink2"},r.meaning),raw:r=>r.meaning},
   ];
   v.append(sortableTable(cols,params,{placeholder:"Search measured parameters…",sort:"group",exportName:"ideas_measurements.csv"}));
 }
@@ -1141,10 +1400,10 @@ function renderQuality(v){
 
   // completeness bars
   v.append(el("h3",{},"Per-table completeness"));
-  const rows=M.tables.map(t=>({name:t.name,nrows:t.nrows,ncols:t.ncols,completeness:t.completeness,
-     empties:t.col_meta.filter(c=>c.missing_percent===100).length}));
+  const rows=M.tables.map(t=>({name:t.name,release:t.release,nrows:t.nrows,ncols:t.ncols,completeness:t.completeness,
+     empties:t.col_meta.filter(c=>c.missing_percent===100 && !c.is_removed).length}));
   const cols=[
-    {key:"name",label:"Table",cls:"mono",render:r=>el("a",{href:"#tables/"+r.name},r.name)},
+    {key:"name",label:"Table",cls:"mono",render:r=>el("span",{},[el("a",{href:"#tables/"+r.name},r.name),r.release?el("span",{},[" ",releaseBadge(r.release)]):null]),raw:r=>r.name},
     {key:"nrows",label:"Rows",num:true,render:r=>fmt(r.nrows)},
     {key:"ncols",label:"Cols",num:true},
     {key:"completeness",label:"Filled",num:true,render:r=>el("span",{},[el("span",{class:"meter mini"},el("i",{style:`width:${r.completeness}%;background:${completenessColor(r.completeness)}`}))," "+r.completeness+"%"]),raw:r=>r.completeness},
@@ -1156,18 +1415,24 @@ function renderQuality(v){
 /* =============================================================== Download */
 function renderDownload(v){
   v.append(el("h2",{},"Download the data"));
-  v.append(el("p",{class:"sec-intro"},"Everything below is generated directly from the typed <code>tetrad_v1</code> Iceberg warehouse by the portal's reproducible pipeline (<code>analyze_iceberg.py</code>): the original warehouse, per-table Parquet, a typed relational database, and the field-level data dictionary. For per-table Parquet and the full snapshot history, see the <a href='#explore'>Iceberg &amp; Files</a> page."));
+  v.append(el("p",{class:"sec-intro",html:"Everything below is generated by the portal's reproducible pipeline (<code>analyze_iceberg.py</code>) from the <b>union</b> of both releases — the typed <code>tetrad_v1</code> Iceberg warehouse overlaid on the earlier all-TEXT release, so nothing is lost. You can download each raw release, the typed union database, the field-level data dictionary, and the LinkML schema. For per-table Parquet and the full snapshot history, see the <a href='#explore'>Iceberg &amp; Files</a> page."}));
 
   const groups=[
     ["Typed data (source)", [
-      ["tetrad_v1_iceberg.zip","Apache Iceberg warehouse (ZIP)","downloads/tetrad_v1_iceberg.zip",
-        "The full source: every table's Parquet data + Iceberg metadata and all snapshots. Read with PyIceberg, Spark, or DuckDB's <code>iceberg</code> extension. Real column types preserved.","zip"],
-      ["ideas.db","SQLite database (typed)","downloads/ideas.db",
-        "All 12 tables as a ready-to-query SQLite file with real types (INTEGER / REAL / TEXT). Open with <code>sqlite3 ideas.db</code>, DB Browser, pandas or DuckDB.","db"],
+      ["tetrad_v1_iceberg.zip","Apache Iceberg warehouse — tetrad_v1 (ZIP)","downloads/tetrad_v1_iceberg.zip",
+        "The newer typed release: every surviving table's Parquet data + Iceberg metadata and all snapshots. Read with PyIceberg, Spark, or DuckDB's <code>iceberg</code> extension. Real column types preserved.","zip"],
+      ["ideas_earlier_parquet.zip","Earlier release — Parquet (ZIP)","downloads/ideas_earlier_parquet.zip",
+        "The earlier all-TEXT release restored here: the 9 tables dropped in tetrad_v1 (protein metrics, mutants, AI design, methods, people…) plus the earlier sample_parameter reaction conditions, as Parquet.","zip"],
+      ["ideas.db","SQLite database (typed, union)","downloads/ideas.db",
+        "All 21 tables of the union as a ready-to-query SQLite file with real types (INTEGER / REAL / TEXT). Open with <code>sqlite3 ideas.db</code>, DB Browser, pandas or DuckDB.","db"],
       ["ideas_dump.sql","SQL dump (schema + all data)","downloads/ideas_dump.sql",
         "Complete SQL dump: CREATE TABLE statements plus every row. Restore with <code>sqlite3 ideas.db &lt; ideas_dump.sql</code>.","db"],
       ["metadata.json","Full portal metadata (JSON)","downloads/metadata.json",
-        "The complete analysis bundle powering this site: typed schema, stats, relationships, findings, units, cross-refs, Iceberg snapshot history, the BRIDGE project model, and all rows.","json"],
+        "The complete analysis bundle powering this site: typed union schema, stats, relationships, findings, units, cross-refs, release-change flags, the LinkML schema, the BRIDGE project model, and all rows.","json"],
+    ]],
+    ["Schema", [
+      ["ideas.linkml.yaml","LinkML schema (YAML)","downloads/ideas.linkml.yaml",
+        "The full dataset modelled in <b>LinkML</b> against the BRIDGE base classes — typed slots, UCUM-coded units, CURIE prefixes. Feed to <code>gen-json-schema</code>, <code>gen-sqlddl</code>, <code>gen-pydantic</code>, <code>gen-owl</code>. See the <a href='#linkml'>Schema (LinkML)</a> tab.","file"],
     ]],
     ["Data dictionary", [
       ["data_dictionary.csv","Data dictionary (CSV)","downloads/data_dictionary.csv",
